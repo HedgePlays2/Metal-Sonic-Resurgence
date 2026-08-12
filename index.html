@@ -2,787 +2,149 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Metal Sonic: Resurgence</title>
 
     <!-- Puter.js -->
     <script src="https://js.puter.com/v2/"></script>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #05070d;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #game-container {
-            position: relative;
-
-            width: min(100vw, 960px);
-            aspect-ratio: 16 / 9;
-
-            overflow: hidden;
-
-            background: #10182b;
-
-            box-shadow:
-                0 0 40px rgba(0, 0, 0, 0.8);
-        }
-
-        canvas {
-            display: block;
-
-            width: 100%;
-            height: 100%;
-
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
-        }
-
-        /* =========================
-           TITLE SCREEN
-        ========================= */
-
-        #title-screen {
-            position: absolute;
-            inset: 0;
-
-            z-index: 10;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            background:
-                radial-gradient(
-                    circle at center,
-                    #29477d 0%,
-                    #111d38 45%,
-                    #05070d 100%
-                );
-        }
-
-        #title-screen h1 {
-            color: white;
-
-            font-size: clamp(42px, 8vw, 90px);
-
-            font-weight: 900;
-            font-style: italic;
-
-            line-height: 0.9;
-
-            letter-spacing: -4px;
-
-            text-shadow:
-                5px 5px 0 #080b12,
-                0 0 25px rgba(50, 150, 255, 0.8);
-        }
-
-        #title-screen h1 span {
-            display: block;
-
-            color: #168cff;
-
-            font-size: 0.48em;
-
-            letter-spacing: 8px;
-
-            margin-bottom: 12px;
-
-            text-shadow:
-                3px 3px 0 #080b12,
-                0 0 20px #168cff;
-        }
-
-        #subtitle {
-            margin-top: 22px;
-
-            color: #b9c8e8;
-
-            font-size: 13px;
-
-            letter-spacing: 4px;
-        }
-
-        #start-button {
-            margin-top: 42px;
-
-            padding: 15px 55px;
-
-            border: 3px solid white;
-            border-radius: 5px;
-
-            background: #168cff;
-
-            color: white;
-
-            font-size: 21px;
-            font-weight: 900;
-
-            letter-spacing: 3px;
-
-            cursor: pointer;
-
-            box-shadow:
-                0 6px 0 #07519b,
-                0 0 25px rgba(22, 140, 255, 0.7);
-
-            transition:
-                transform 0.1s,
-                background 0.1s;
-        }
-
-        #start-button:hover {
-            background: #39a4ff;
-
-            transform: translateY(-3px);
-        }
-
-        #start-button:active {
-            transform: translateY(5px);
-
-            box-shadow:
-                0 1px 0 #07519b;
-        }
-
-        #controls {
-            margin-top: 24px;
-
-            color: #8999b8;
-
-            font-size: 13px;
-        }
-
-        /* =========================
-           LOADING SCREEN
-        ========================= */
-
-        #loading {
-            position: absolute;
-            inset: 0;
-
-            z-index: 20;
-
-            display: none;
-
-            align-items: center;
-            justify-content: center;
-
-            background: #05070d;
-
-            color: white;
-
-            font-size: 22px;
-            font-weight: bold;
-        }
-
-        /* =========================
-           HUD
-        ========================= */
-
-        #hud {
-            position: absolute;
-
-            top: 12px;
-            left: 15px;
-
-            z-index: 5;
-
-            display: none;
-
-            color: white;
-
-            font-weight: bold;
-
-            text-shadow:
-                2px 2px 0 #000;
-        }
-
-        .hud-title {
-            color: #168cff;
-
-            font-size: 13px;
-
-            letter-spacing: 2px;
-        }
-
-        .hud-value {
-            font-size: 18px;
-
-            margin-top: 2px;
-        }
-
-        /* =========================
-           MOBILE
-        ========================= */
-
-        @media (max-width: 600px) {
-
-            #title-screen h1 {
-                letter-spacing: -2px;
-            }
-
-            #title-screen h1 span {
-                letter-spacing: 4px;
-            }
-
-            #start-button {
-                padding: 13px 35px;
-
-                font-size: 18px;
-            }
-
-            #controls {
-                font-size: 11px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div id="game-container">
+    <main id="game-container">
 
-    <canvas
-        id="gameCanvas"
-        width="424"
-        height="240">
-    </canvas>
+        <!-- GAME CANVAS -->
 
-    <!-- Loading -->
+        <canvas
+            id="gameCanvas"
+            width="424"
+            height="240">
+        </canvas>
 
-    <div id="loading">
-        LOADING...
-    </div>
 
-    <!-- Title -->
+        <!-- LOADING SCREEN -->
 
-    <div id="title-screen">
+        <div id="loading">
+            <div class="loading-content">
 
-        <h1>
+                <div class="loading-title">
+                    METAL SONIC
+                </div>
 
-            <span>
-                METAL SONIC
-            </span>
+                <div class="loading-text">
+                    LOADING RESURGENCE...
+                </div>
 
-            RESURGENCE
+                <div class="loading-bar">
+                    <div class="loading-bar-fill"></div>
+                </div>
 
-        </h1>
-
-        <div id="subtitle">
-            A FAN-MADE SONIC ADVENTURE
+            </div>
         </div>
 
-        <button id="start-button">
-            START GAME
+
+        <!-- TITLE SCREEN -->
+
+        <section id="title-screen">
+
+            <div class="title-content">
+
+                <div class="small-title">
+                    METAL SONIC
+                </div>
+
+                <h1>
+                    RESURGENCE
+                </h1>
+
+                <div class="subtitle">
+                    A FAN-MADE SONIC ADVENTURE
+                </div>
+
+                <button
+                    id="start-button"
+                    type="button"
+                >
+                    START GAME
+                </button>
+
+                <div class="controls">
+
+                    <div>
+                        ARROWS
+                        <span>MOVE</span>
+                    </div>
+
+                    <div>
+                        SPACE
+                        <span>JUMP</span>
+                    </div>
+
+                    <div>
+                        SHIFT
+                        <span>PLASMA DASH</span>
+                    </div>
+
+                    <div>
+                        E
+                        <span>OVERDRIVE</span>
+                    </div>
+
+                </div>
+
+                <div class="version">
+                    PROTOTYPE BUILD
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- HUD -->
+
+        <div id="hud">
+
+            <div class="hud-character">
+                METAL SONIC
+            </div>
+
+            <div class="hud-row">
+                <span>RINGS</span>
+                <span id="rings">0</span>
+            </div>
+
+            <div class="hud-row">
+                <span>SCORE</span>
+                <span id="score">0</span>
+            </div>
+
+        </div>
+
+
+        <!-- PAUSE BUTTON -->
+
+        <button
+            id="pause-button"
+            type="button"
+            aria-label="Pause Game"
+        >
+            II
         </button>
 
-        <div id="controls">
-            ARROW KEYS — MOVE &nbsp; | &nbsp; SPACE — JUMP
-        </div>
+    </main>
 
-    </div>
 
-    <!-- HUD -->
+    <!-- GAME SCRIPT -->
 
-    <div id="hud">
-
-        <div class="hud-title">
-            METAL SONIC
-        </div>
-
-        <div class="hud-value">
-            RINGS:
-            <span id="rings">0</span>
-        </div>
-
-        <div class="hud-value">
-            SCORE:
-            <span id="score">0</span>
-        </div>
-
-    </div>
-
-</div>
-
-<script>
-
-    /* =====================================
-       CANVAS
-    ===================================== */
-
-    const canvas =
-        document.getElementById("gameCanvas");
-
-    const ctx =
-        canvas.getContext("2d");
-
-
-    /* =====================================
-       UI
-    ===================================== */
-
-    const titleScreen =
-        document.getElementById("title-screen");
-
-    const startButton =
-        document.getElementById("start-button");
-
-    const loading =
-        document.getElementById("loading");
-
-    const hud =
-        document.getElementById("hud");
-
-    const ringsText =
-        document.getElementById("rings");
-
-    const scoreText =
-        document.getElementById("score");
-
-
-    /* =====================================
-       GAME STATE
-    ===================================== */
-
-    let gameStarted = false;
-
-    let rings = 0;
-
-    let score = 0;
-
-
-    /* =====================================
-       METAL SONIC
-    ===================================== */
-
-    const player = {
-
-        x: 80,
-
-        y: 160,
-
-        width: 24,
-
-        height: 32,
-
-        velocityX: 0,
-
-        velocityY: 0,
-
-        grounded: false
-
-    };
-
-
-    /* =====================================
-       INPUT
-    ===================================== */
-
-    const keys = {};
-
-
-    document.addEventListener(
-        "keydown",
-        function(event) {
-
-            keys[event.code] = true;
-
-            if (
-                event.code === "ArrowUp" ||
-                event.code === "ArrowDown" ||
-                event.code === "ArrowLeft" ||
-                event.code === "ArrowRight" ||
-                event.code === "Space"
-            ) {
-
-                event.preventDefault();
-
-            }
-
-        }
-    );
-
-
-    document.addEventListener(
-        "keyup",
-        function(event) {
-
-            keys[event.code] = false;
-
-        }
-    );
-
-
-    /* =====================================
-       START GAME
-    ===================================== */
-
-    startButton.addEventListener(
-        "click",
-        startGame
-    );
-
-
-    function startGame() {
-
-        if (gameStarted)
-            return;
-
-        gameStarted = true;
-
-        loading.style.display = "flex";
-
-        titleScreen.style.display = "none";
-
-        setTimeout(function() {
-
-            loading.style.display = "none";
-
-            hud.style.display = "block";
-
-            startGameLoop();
-
-        }, 500);
-
-    }
-
-
-    /* =====================================
-       GAME LOOP
-    ===================================== */
-
-    function startGameLoop() {
-
-        requestAnimationFrame(gameLoop);
-
-    }
-
-
-    function gameLoop() {
-
-        update();
-
-        draw();
-
-        requestAnimationFrame(gameLoop);
-
-    }
-
-
-    /* =====================================
-       UPDATE
-    ===================================== */
-
-    function update() {
-
-        if (!gameStarted)
-            return;
-
-
-        /*
-         * MOVEMENT
-         */
-
-        const acceleration = 0.5;
-
-        const maxSpeed = 6;
-
-
-        if (keys["ArrowLeft"]) {
-
-            player.velocityX -= acceleration;
-
-        }
-
-
-        if (keys["ArrowRight"]) {
-
-            player.velocityX += acceleration;
-
-        }
-
-
-        /*
-         * FRICTION
-         */
-
-        if (
-            !keys["ArrowLeft"] &&
-            !keys["ArrowRight"]
-        ) {
-
-            player.velocityX *= 0.85;
-
-        }
-
-
-        /*
-         * SPEED LIMIT
-         */
-
-        player.velocityX =
-            Math.max(
-                -maxSpeed,
-                Math.min(
-                    maxSpeed,
-                    player.velocityX
-                )
-            );
-
-
-        /*
-         * JUMP
-         */
-
-        if (
-            keys["Space"] &&
-            player.grounded
-        ) {
-
-            player.velocityY = -9;
-
-            player.grounded = false;
-
-        }
-
-
-        /*
-         * GRAVITY
-         */
-
-        player.velocityY += 0.45;
-
-
-        /*
-         * MOVE
-         */
-
-        player.x += player.velocityX;
-
-        player.y += player.velocityY;
-
-
-        /*
-         * GROUND
-         */
-
-        const groundY = 205;
-
-
-        if (
-            player.y + player.height >= groundY
-        ) {
-
-            player.y =
-                groundY - player.height;
-
-            player.velocityY = 0;
-
-            player.grounded = true;
-
-        }
-
-
-        /*
-         * LEFT WALL
-         */
-
-        if (player.x < 0) {
-
-            player.x = 0;
-
-            player.velocityX = 0;
-
-        }
-
-
-        /*
-         * RIGHT WALL
-         */
-
-        if (
-            player.x + player.width >
-            canvas.width
-        ) {
-
-            player.x =
-                canvas.width -
-                player.width;
-
-            player.velocityX = 0;
-
-        }
-
-    }
-
-
-    /* =====================================
-       DRAW
-    ===================================== */
-
-    function draw() {
-
-        /*
-         * SKY
-         */
-
-        ctx.fillStyle = "#172b50";
-
-        ctx.fillRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-        );
-
-
-        /*
-         * BACKGROUND BUILDINGS
-         */
-
-        ctx.fillStyle = "#244477";
-
-        for (
-            let x = 0;
-            x < canvas.width;
-            x += 48
-        ) {
-
-            ctx.fillRect(
-                x,
-                145,
-                32,
-                50
-            );
-
-        }
-
-
-        /*
-         * GROUND GRASS
-         */
-
-        ctx.fillStyle = "#24a64a";
-
-        ctx.fillRect(
-            0,
-            195,
-            canvas.width,
-            10
-        );
-
-
-        /*
-         * GROUND
-         */
-
-        ctx.fillStyle = "#8b552d";
-
-        ctx.fillRect(
-            0,
-            205,
-            canvas.width,
-            35
-        );
-
-
-        /*
-         * METAL SONIC
-         *
-         * Temporary placeholder.
-         * We'll replace this with
-         * actual sprites later.
-         */
-
-        ctx.fillStyle = "#aeb8c4";
-
-        ctx.fillRect(
-            player.x,
-            player.y,
-            player.width,
-            player.height
-        );
-
-
-        /*
-         * VISOR
-         */
-
-        ctx.fillStyle = "#168cff";
-
-        ctx.fillRect(
-            player.x + 5,
-            player.y + 7,
-            14,
-            5
-        );
-
-
-        /*
-         * CHEST
-         */
-
-        ctx.fillStyle = "#394553";
-
-        ctx.fillRect(
-            player.x + 4,
-            player.y + 18,
-            16,
-            10
-        );
-
-
-        /*
-         * EYES
-         */
-
-        ctx.fillStyle = "#ffffff";
-
-        ctx.fillRect(
-            player.x + 7,
-            player.y + 8,
-            4,
-            2
-        );
-
-        ctx.fillRect(
-            player.x + 14,
-            player.y + 8,
-            4,
-            2
-        );
-
-    }
-
-
-    /* =====================================
-       INITIAL DRAW
-    ===================================== */
-
-    draw();
-
-</script>
+    <script src="game.js"></script>
 
 </body>
 </html>
