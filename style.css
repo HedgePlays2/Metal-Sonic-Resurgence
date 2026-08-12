@@ -13,39 +13,44 @@ body {
 
 body {
     background: #05070d;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-family: Arial, Helvetica, sans-serif;
 }
 
 
 /* =========================================
-   GAME CONTAINER
+   GAME
 ========================================= */
 
 #game-container {
     position: relative;
 
-    width: min(100vw, 960px);
-    aspect-ratio: 16 / 9;
+    width: 100vw;
+    height: 100vh;
+
+    max-width: 177.78vh;
+    max-height: 56.25vw;
 
     overflow: hidden;
 
     background: #10182b;
-
-    border: 2px solid #1b2c4d;
-
-    box-shadow:
-        0 0 35px rgba(0, 0, 0, 0.8);
 }
 
 
 #gameCanvas {
-    display: block;
+    position: absolute;
+
+    left: 0;
+    top: 0;
 
     width: 100%;
     height: 100%;
+
+    display: block;
 
     image-rendering: pixelated;
     image-rendering: crisp-edges;
@@ -68,8 +73,6 @@ body {
     align-items: center;
     justify-content: center;
 
-    text-align: center;
-
     background:
         radial-gradient(
             circle at center,
@@ -77,6 +80,8 @@ body {
             #14213e 45%,
             #05070d 100%
         );
+
+    text-align: center;
 }
 
 
@@ -86,13 +91,19 @@ body {
     flex-direction: column;
 
     align-items: center;
+
+    width: 100%;
 }
 
 
 .small-title {
     color: #168cff;
 
-    font-size: clamp(18px, 3vw, 32px);
+    font-size: clamp(
+        20px,
+        4vw,
+        42px
+    );
 
     font-weight: 900;
 
@@ -107,11 +118,15 @@ body {
 
 
 h1 {
-    margin-top: 2px;
+    margin-top: 5px;
 
     color: white;
 
-    font-size: clamp(45px, 9vw, 100px);
+    font-size: clamp(
+        50px,
+        10vw,
+        120px
+    );
 
     font-weight: 900;
 
@@ -119,20 +134,29 @@ h1 {
 
     line-height: 0.9;
 
-    letter-spacing: -5px;
+    letter-spacing: -6px;
 
     text-shadow:
         6px 6px 0 #05070d,
-        0 0 30px rgba(40, 150, 255, 0.7);
+        0 0 30px rgba(
+            40,
+            150,
+            255,
+            0.7
+        );
 }
 
 
 .subtitle {
-    margin-top: 18px;
+    margin-top: 20px;
 
     color: #aabbd8;
 
-    font-size: 12px;
+    font-size: clamp(
+        9px,
+        1.3vw,
+        14px
+    );
 
     font-weight: bold;
 
@@ -141,25 +165,25 @@ h1 {
 
 
 /* =========================================
-   START BUTTON
+   START
 ========================================= */
 
 #start-button {
-    margin-top: 38px;
+    margin-top: 40px;
 
-    min-width: 220px;
+    min-width: 230px;
 
-    padding: 14px 35px;
+    padding: 16px 40px;
 
     border: 3px solid white;
 
-    border-radius: 4px;
+    border-radius: 5px;
 
     background: #168cff;
 
     color: white;
 
-    font-size: 20px;
+    font-size: 21px;
 
     font-weight: 900;
 
@@ -169,11 +193,12 @@ h1 {
 
     box-shadow:
         0 6px 0 #07519b,
-        0 0 25px rgba(22, 140, 255, 0.6);
-
-    transition:
-        transform 0.1s,
-        background 0.1s;
+        0 0 25px rgba(
+            22,
+            140,
+            255,
+            0.7
+        );
 }
 
 
@@ -199,17 +224,15 @@ h1 {
 .controls {
     display: flex;
 
-    gap: 18px;
+    gap: 25px;
 
     margin-top: 30px;
 
-    color: #d5e0f3;
+    color: white;
 
-    font-size: 10px;
+    font-size: 11px;
 
     font-weight: bold;
-
-    letter-spacing: 1px;
 }
 
 
@@ -218,14 +241,16 @@ h1 {
 
     flex-direction: column;
 
-    gap: 3px;
+    gap: 4px;
 }
 
 
 .controls span {
-    color: #7083a3;
+    color: #7185a7;
 
     font-size: 8px;
+
+    letter-spacing: 1px;
 }
 
 
@@ -241,7 +266,7 @@ h1 {
 
 
 /* =========================================
-   LOADING SCREEN
+   LOADING
 ========================================= */
 
 #loading {
@@ -263,7 +288,7 @@ h1 {
 
 
 .loading-content {
-    width: 220px;
+    width: 260px;
 
     text-align: center;
 }
@@ -272,22 +297,22 @@ h1 {
 .loading-title {
     color: #168cff;
 
-    font-size: 18px;
+    font-size: 22px;
 
     font-weight: 900;
 
     font-style: italic;
 
-    letter-spacing: 3px;
+    letter-spacing: 4px;
 }
 
 
 .loading-text {
-    margin-top: 8px;
+    margin-top: 10px;
 
     color: #9aa9c4;
 
-    font-size: 9px;
+    font-size: 10px;
 
     letter-spacing: 2px;
 }
@@ -296,9 +321,9 @@ h1 {
 .loading-bar {
     width: 100%;
 
-    height: 7px;
+    height: 8px;
 
-    margin-top: 15px;
+    margin-top: 18px;
 
     background: #17243b;
 
@@ -313,7 +338,8 @@ h1 {
 
     background: #168cff;
 
-    animation: loading 0.5s linear;
+    animation:
+        loading 0.5s linear;
 }
 
 
@@ -337,14 +363,14 @@ h1 {
 #hud {
     position: absolute;
 
-    top: 12px;
-    left: 14px;
+    top: 20px;
+    left: 25px;
 
     z-index: 5;
 
     display: none;
 
-    min-width: 100px;
+    min-width: 130px;
 
     color: white;
 
@@ -356,11 +382,11 @@ h1 {
 
 
 .hud-character {
-    margin-bottom: 5px;
+    margin-bottom: 7px;
 
     color: #168cff;
 
-    font-size: 10px;
+    font-size: 12px;
 
     letter-spacing: 2px;
 }
@@ -371,34 +397,41 @@ h1 {
 
     justify-content: space-between;
 
-    gap: 20px;
+    gap: 25px;
 
-    font-size: 12px;
+    font-size: 14px;
 }
 
 
 /* =========================================
-   PAUSE BUTTON
+   PAUSE
 ========================================= */
 
 #pause-button {
     position: absolute;
 
-    top: 12px;
-    right: 14px;
+    top: 20px;
+    right: 25px;
 
     z-index: 6;
 
     display: none;
 
-    width: 30px;
-    height: 30px;
+    width: 38px;
+    height: 38px;
 
     border: 2px solid white;
 
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(
+        0,
+        0,
+        0,
+        0.45
+    );
 
     color: white;
+
+    font-size: 16px;
 
     font-weight: 900;
 
@@ -407,7 +440,7 @@ h1 {
 
 
 /* =========================================
-   MOBILE
+   SMALL SCREENS
 ========================================= */
 
 @media (max-width: 600px) {
@@ -421,20 +454,19 @@ h1 {
     }
 
     .subtitle {
-        font-size: 8px;
         letter-spacing: 2px;
     }
 
     #start-button {
         min-width: 180px;
 
-        padding: 12px 25px;
+        padding: 13px 25px;
 
-        font-size: 16px;
+        font-size: 17px;
     }
 
     .controls {
-        gap: 9px;
+        gap: 10px;
 
         font-size: 8px;
     }
