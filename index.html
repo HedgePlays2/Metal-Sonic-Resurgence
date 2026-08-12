@@ -13,14 +13,17 @@
     <!-- Puter.js -->
     <script src="https://js.puter.com/v2/"></script>
 
+    <!-- Game stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main id="game-container">
+    <div id="game-container">
 
-        <!-- GAME CANVAS -->
+        <!-- =====================================
+             GAME CANVAS
+        ====================================== -->
 
         <canvas
             id="gameCanvas"
@@ -29,30 +32,11 @@
         </canvas>
 
 
-        <!-- LOADING SCREEN -->
+        <!-- =====================================
+             TITLE SCREEN
+        ====================================== -->
 
-        <div id="loading">
-            <div class="loading-content">
-
-                <div class="loading-title">
-                    METAL SONIC
-                </div>
-
-                <div class="loading-text">
-                    LOADING RESURGENCE...
-                </div>
-
-                <div class="loading-bar">
-                    <div class="loading-bar-fill"></div>
-                </div>
-
-            </div>
-        </div>
-
-
-        <!-- TITLE SCREEN -->
-
-        <section id="title-screen">
+        <div id="title-screen">
 
             <div class="title-content">
 
@@ -70,8 +54,7 @@
 
                 <button
                     id="start-button"
-                    type="button"
-                >
+                    type="button">
                     START GAME
                 </button>
 
@@ -105,10 +88,39 @@
 
             </div>
 
-        </section>
+        </div>
 
 
-        <!-- HUD -->
+        <!-- =====================================
+             LOADING SCREEN
+        ====================================== -->
+
+        <div id="loading">
+
+            <div class="loading-content">
+
+                <div class="loading-title">
+                    METAL SONIC
+                </div>
+
+                <div class="loading-text">
+                    LOADING RESURGENCE...
+                </div>
+
+                <div class="loading-bar">
+
+                    <div class="loading-bar-fill"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             HUD
+        ====================================== -->
 
         <div id="hud">
 
@@ -129,20 +141,23 @@
         </div>
 
 
-        <!-- PAUSE BUTTON -->
+        <!-- =====================================
+             PAUSE BUTTON
+        ====================================== -->
 
         <button
             id="pause-button"
             type="button"
-            aria-label="Pause Game"
-        >
+            aria-label="Pause Game">
             II
         </button>
 
-    </main>
+    </div>
 
 
-    <!-- GAME SCRIPT -->
+    <!-- =====================================
+         GAME JAVASCRIPT
+    ====================================== -->
 
     <script src="game.js"></script>
 
