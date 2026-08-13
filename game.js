@@ -5,14 +5,28 @@ const startButton = document.getElementById("start-button");
 const titleScreen = document.getElementById("title-screen");
 const hud = document.getElementById("hud");
 
+
+// ==========================
+// SPRITES
+// ==========================
+
+const metalSprite = new Image();
+
+metalSprite.src = "sprites/idle.png";
+
+
+// ==========================
+// GAME STATE
+// ==========================
+
 let gameStarted = false;
 
+let keys = {};
 
-/* =========================
-   GAME SETTINGS
-========================= */
 
-const gravity = 0.5;
+// ==========================
+// WORLD
+// ==========================
 
 const world = {
     width: 3000,
@@ -20,46 +34,48 @@ const world = {
 };
 
 
-/* =========================
-   METAL SONIC
-========================= */
+// ==========================
+// METAL SONIC
+// ==========================
 
 const metal = {
-    x: 80,
+
+    x: 100,
     y: 100,
 
-    width: 28,
-    height: 42,
+    width: 40,
+    height: 60,
 
-    speed: 0,
-    maxSpeed: 6,
-
-    acceleration: 0.35,
-    friction: 0.2,
-
-    jumpPower: -10,
-
+    velocityX: 0,
     velocityY: 0,
 
+    speed: 6,
+    jumpPower: -11,
+
     grounded: false
+
 };
 
 
-let keys = {};
+// ==========================
+// CAMERA
+// ==========================
 
-let camera = {
+const camera = {
     x: 0
 };
 
 
-/* =========================
-   INPUT
-========================= */
+// ==========================
+// INPUT
+// ==========================
 
 window.addEventListener(
     "keydown",
     e => {
+
         keys[e.key.toLowerCase()] = true;
+
     }
 );
 
@@ -67,14 +83,16 @@ window.addEventListener(
 window.addEventListener(
     "keyup",
     e => {
+
         keys[e.key.toLowerCase()] = false;
+
     }
 );
 
 
-/* =========================
-   START GAME
-========================= */
+// ==========================
+// START BUTTON
+// ==========================
 
 startButton.onclick = () => {
 
@@ -87,52 +105,39 @@ startButton.onclick = () => {
 };
 
 
-/* =========================
-   UPDATE
-========================= */
+// ==========================
+// UPDATE
+// ==========================
 
 function update(){
 
+
     if(!gameStarted)
         return;
+
 
 
     // Movement
 
     if(keys["arrowright"]){
 
-        metal.speed += metal.acceleration;
+        metal.velocityX = metal.speed;
 
     }
-
     else if(keys["arrowleft"]){
 
-        metal.speed -= metal.acceleration;
+        metal.velocityX = -metal.speed;
 
     }
-
     else {
 
-        if(metal.speed > 0)
-            metal.speed -= metal.friction;
-
-        if(metal.speed < 0)
-            metal.speed += metal.friction;
+        metal.velocityX *= 0.8;
 
     }
 
 
-    // Limit speed
 
-    if(metal.speed > metal.maxSpeed)
-        metal.speed = metal.maxSpeed;
-
-    if(metal.speed < -metal.maxSpeed)
-        metal.speed = -metal.maxSpeed;
-
-
-
-    metal.x += metal.speed;
+    metal.x += metal.velocityX;
 
 
 
@@ -153,7 +158,7 @@ function update(){
 
     // Gravity
 
-    metal.velocityY += gravity;
+    metal.velocityY += 0.5;
 
     metal.y += metal.velocityY;
 
@@ -190,27 +195,20 @@ function update(){
         camera.x =
             world.width - canvas.width;
 
+
 }
 
 
-
-/* =========================
-   DRAW
-========================= */
+// ==========================
+// DRAW
+// ==========================
 
 function draw(){
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
 
 
     // Sky
 
-    ctx.fillStyle = "#59b7ff";
+    ctx.fillStyle = "#1c315b";
 
     ctx.fillRect(
         0,
@@ -223,15 +221,40 @@ function draw(){
 
     ctx.save();
 
+
     ctx.translate(
         -camera.x,
         0
     );
 
 
+
+    // Mountains
+
+    ctx.fillStyle = "#294878";
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(0,170);
+
+    ctx.lineTo(300,50);
+
+    ctx.lineTo(600,170);
+
+    ctx.lineTo(900,50);
+
+    ctx.lineTo(1200,170);
+
+    ctx.lineTo(0,170);
+
+    ctx.fill();
+
+
+
     // Ground
 
-    ctx.fillStyle = "#35a832";
+    ctx.fillStyle = "#26a83d";
 
     ctx.fillRect(
         0,
@@ -241,51 +264,87 @@ function draw(){
     );
 
 
-    // Metal Sonic placeholder
-
-    ctx.fillStyle = "#168cff";
+    ctx.fillStyle = "#8b542c";
 
     ctx.fillRect(
-        metal.x,
-        metal.y,
-        metal.width,
-        metal.height
+        0,
+        world.ground + 25,
+        world.width,
+        100
     );
 
 
-    // Eye
 
-    ctx.fillStyle = "red";
+    // Metal Sonic sprite
 
-    ctx.fillRect(
-        metal.x + 18,
-        metal.y + 10,
-        5,
-        5
-    );
+    if(metalSprite.complete){
+
+        ctx.drawImage(
+
+            metalSprite,
+
+            metal.x - 15,
+
+            metal.y - 15,
+
+            70,
+
+            85
+
+        );
+
+    }
+
+
+
+    // Test rings
+
+    for(let i = 0; i < 5; i++){
+
+        ctx.strokeStyle = "#ffd83d";
+
+        ctx.lineWidth = 5;
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            500 + i * 50,
+
+            140,
+
+            15,
+
+            0,
+
+            Math.PI * 2
+
+        );
+
+        ctx.stroke();
+
+    }
+
 
 
     ctx.restore();
 
-
-    requestAnimationFrame(draw);
-
 }
 
 
-/* =========================
-   LOOP
-========================= */
+// ==========================
+// LOOP
+// ==========================
 
-function gameLoop(){
+function loop(){
 
     update();
 
-    requestAnimationFrame(gameLoop);
+    draw();
+
+    requestAnimationFrame(loop);
 
 }
 
 
-gameLoop();
-
-draw();
+loop();
