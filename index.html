@@ -5,21 +5,12 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Metal Sonic: Resurgence
-    </title>
+    <title>Metal Sonic: Resurgence</title>
 
-
-    <!-- Puter.js -->
     <script src="https://js.puter.com/v2/"></script>
 
-
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -31,8 +22,6 @@
 <div id="game-container">
 
 
-    <!-- GAME SCREEN -->
-
     <canvas
         id="gameCanvas"
         width="424"
@@ -40,8 +29,6 @@
     </canvas>
 
 
-
-    <!-- TITLE SCREEN -->
 
     <div id="title-screen">
 
@@ -65,124 +52,58 @@
 
 
             <button id="start-button">
-
                 START GAME
-
             </button>
 
 
 
             <div class="controls">
 
-
                 <div>
                     ARROWS
-                    <span>
-                        MOVE
-                    </span>
+                    <span>MOVE</span>
                 </div>
 
 
                 <div>
                     SPACE
-                    <span>
-                        JUMP
-                    </span>
+                    <span>JUMP</span>
                 </div>
 
 
                 <div>
                     SHIFT
-                    <span>
-                        PLASMA DASH
-                    </span>
+                    <span>PLASMA DASH</span>
                 </div>
 
 
                 <div>
                     E
-                    <span>
-                        OVERDRIVE
-                    </span>
+                    <span>OVERDRIVE</span>
                 </div>
-
 
             </div>
 
 
 
             <div class="version">
-
                 PROTOTYPE BUILD
-
             </div>
 
 
         </div>
 
-
     </div>
 
 
 
-
-
-    <!-- LOADING SCREEN -->
-
-    <div id="loading">
-
-
-        <div class="loading-content">
-
-
-            <div class="loading-title">
-
-                METAL SONIC
-
-            </div>
-
-
-
-            <div class="loading-text">
-
-                LOADING RESURGENCE...
-
-            </div>
-
-
-
-            <div class="loading-bar">
-
-
-                <div
-                    id="loading-bar-fill"
-                    class="loading-bar-fill">
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </div>
-
-
-
-
-
-    <!-- HUD -->
 
     <div id="hud">
 
 
         <div class="hud-character">
-
             METAL SONIC
-
         </div>
-
 
 
         <div class="hud-row">
@@ -191,13 +112,11 @@
                 RINGS
             </span>
 
-
             <span id="rings">
                 0
             </span>
 
         </div>
-
 
 
         <div class="hud-row">
@@ -206,11 +125,9 @@
                 SCORE
             </span>
 
-
             <span id="score">
                 0
             </span>
-
 
         </div>
 
@@ -220,24 +137,44 @@
 
 
 
+    <div id="loading">
 
-    <!-- PAUSE -->
+        <div class="loading-content">
 
-    <button
-        id="pause-button">
+            <div class="loading-title">
+                METAL SONIC
+            </div>
 
+
+            <div class="loading-text">
+                LOADING RESURGENCE...
+            </div>
+
+
+            <div class="loading-bar">
+
+                <div
+                    id="loading-bar-fill"
+                    class="loading-bar-fill">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+    <button id="pause-button">
         II
-
     </button>
-
-
 
 
 </div>
 
 
-
-<!-- GAME CODE -->
 
 <script src="game.js"></script>
 
