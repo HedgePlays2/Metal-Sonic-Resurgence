@@ -42,19 +42,21 @@ body {
 
     position: relative;
 
-    width: 100vw;
-    height: 100vh;
+    width: 424px;
+    height: 240px;
+
+    background: #000;
 
     overflow: hidden;
 
-    background: #000;
+    image-rendering: pixelated;
 
 }
 
 
 
 /* =========================
-   CANVAS
+   GAME CANVAS
 ========================= */
 
 
@@ -62,16 +64,13 @@ body {
 
     position: absolute;
 
+    width: 424px;
+    height: 240px;
+
     left: 0;
     top: 0;
 
-
-    width: 100%;
-    height: 100%;
-
-
     display: block;
-
 
     image-rendering: pixelated;
 
@@ -90,16 +89,13 @@ body {
 
     inset: 0;
 
-
     z-index: 10;
-
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
-
 
     text-align: center;
 
@@ -109,7 +105,7 @@ body {
         radial-gradient(
             circle,
             #355d99,
-            #182946 50%,
+            #182946 55%,
             #05070d
         );
 
@@ -129,36 +125,22 @@ body {
 
 
 
-/* =========================
-   LOGO TEXT
-========================= */
-
-
 .small-title {
 
     color: #168cff;
 
-
-    font-size: clamp(
-        20px,
-        4vw,
-        42px
-    );
-
+    font-size: 22px;
 
     font-weight: 900;
 
     font-style: italic;
 
-
-    letter-spacing: 8px;
+    letter-spacing: 5px;
 
 
     text-shadow:
 
-        4px 4px 0 #000,
-
-        0 0 25px #168cff;
+        3px 3px 0 #000;
 
 }
 
@@ -168,33 +150,22 @@ h1 {
 
     margin-top: 5px;
 
-
     color: white;
 
-
-    font-size: clamp(
-        50px,
-        10vw,
-        120px
-    );
-
+    font-size: 55px;
 
     font-weight: 900;
 
     font-style: italic;
 
-
-    line-height: .85;
-
-
-    letter-spacing: -6px;
+    line-height: .8;
 
 
     text-shadow:
 
-        7px 7px 0 #000,
+        5px 5px 0 #000,
 
-        0 0 35px #168cff;
+        0 0 20px #168cff;
 
 }
 
@@ -202,87 +173,55 @@ h1 {
 
 .subtitle {
 
-    margin-top: 20px;
-
+    margin-top: 15px;
 
     color: #c5d4ec;
 
-
-    font-size: clamp(
-        9px,
-        1.4vw,
-        15px
-    );
-
+    font-size: 10px;
 
     font-weight: bold;
 
-
-    letter-spacing: 4px;
+    letter-spacing: 2px;
 
 }
 
 
 
 /* =========================
-   BUTTON
+   START BUTTON
 ========================= */
 
 
 #start-button {
 
+    margin-top: 25px;
 
-    margin-top: 40px;
-
-
-    padding:
-
-        16px 50px;
+    padding: 10px 35px;
 
 
     border:
 
-        3px solid white;
-
-
-    border-radius: 5px;
+        2px solid white;
 
 
     background: #168cff;
 
 
-    color:white;
+    color: white;
 
 
-    font-size: 20px;
+    font-size: 14px;
 
 
-    font-weight:900;
+    font-weight: 900;
 
 
-    letter-spacing:3px;
-
-
-    cursor:pointer;
-
+    cursor: pointer;
 
 
     box-shadow:
 
-        0 7px 0 #07519b,
-
-        0 0 30px #168cff;
-
-
-}
-
-
-
-#start-button:hover {
-
-
-    background:#42a7ff;
-
+        0 4px 0 #07519b;
 
 }
 
@@ -290,14 +229,11 @@ h1 {
 
 #start-button:active {
 
-
-    transform:translateY(5px);
-
+    transform: translateY(3px);
 
     box-shadow:
 
-        0 2px 0 #07519b;
-
+        0 1px 0 #07519b;
 
 }
 
@@ -310,24 +246,15 @@ h1 {
 
 .controls {
 
+    display: flex;
 
-    display:flex;
+    gap: 12px;
 
+    margin-top: 18px;
 
-    gap:25px;
+    color: white;
 
-
-    margin-top:30px;
-
-
-    color:white;
-
-
-    font-size:10px;
-
-
-    font-weight:bold;
-
+    font-size: 8px;
 
 }
 
@@ -335,12 +262,9 @@ h1 {
 
 .controls div {
 
+    display: flex;
 
-    display:flex;
-
-
-    flex-direction:column;
-
+    flex-direction: column;
 
 }
 
@@ -348,15 +272,9 @@ h1 {
 
 .controls span {
 
+    color: #8fa4c7;
 
-    color:#8fa4c7;
-
-
-    font-size:8px;
-
-
-    margin-top:3px;
-
+    font-size: 6px;
 
 }
 
@@ -364,143 +282,15 @@ h1 {
 
 .version {
 
+    margin-top: 15px;
 
-    margin-top:25px;
+    color: #667995;
 
+    font-size: 7px;
 
-    color:#667995;
-
-
-    font-size:8px;
-
-
-    letter-spacing:3px;
-
+    letter-spacing: 2px;
 
 }
-
-
-
-
-
-/* =========================
-   LOADING
-========================= */
-
-
-#loading {
-
-
-    position:absolute;
-
-
-    inset:0;
-
-
-    z-index:20;
-
-
-    display:none;
-
-
-    justify-content:center;
-
-
-    align-items:center;
-
-
-    background:#05070d;
-
-
-    color:white;
-
-
-}
-
-
-
-.loading-content {
-
-
-    text-align:center;
-
-
-}
-
-
-
-.loading-title {
-
-
-    color:#168cff;
-
-
-    font-size:25px;
-
-
-    font-weight:900;
-
-
-    font-style:italic;
-
-
-}
-
-
-
-.loading-text {
-
-
-    margin-top:10px;
-
-
-    color:#9aa9c4;
-
-
-    font-size:10px;
-
-
-    letter-spacing:2px;
-
-
-}
-
-
-
-.loading-bar {
-
-
-    width:280px;
-
-
-    height:8px;
-
-
-    margin-top:20px;
-
-
-    background:#18263d;
-
-
-}
-
-
-
-.loading-bar-fill {
-
-
-    height:100%;
-
-
-    width:0%;
-
-
-    background:#168cff;
-
-
-}
-
-
 
 
 
@@ -511,32 +301,26 @@ h1 {
 
 #hud {
 
+    position: absolute;
 
-    position:absolute;
+    top: 10px;
 
+    left: 12px;
 
-    top:20px;
-
-
-    left:25px;
-
-
-    z-index:5;
+    z-index: 5;
 
 
-    display:none;
+    display: none;
 
 
-    color:white;
+    color: white;
 
-
-    font-weight:bold;
+    font-size: 10px;
 
 
     text-shadow:
 
-        3px 3px 0 #000;
-
+        2px 2px 0 #000;
 
 }
 
@@ -544,15 +328,11 @@ h1 {
 
 .hud-character {
 
+    color: #168cff;
 
-    color:#168cff;
+    font-weight: bold;
 
-
-    margin-bottom:8px;
-
-
-    font-size:14px;
-
+    margin-bottom: 5px;
 
 }
 
@@ -560,101 +340,165 @@ h1 {
 
 .hud-row {
 
+    display: flex;
 
-    display:flex;
-
-
-    gap:30px;
-
-
-    font-size:16px;
-
+    gap: 20px;
 
 }
 
 
 
+/* =========================
+   LOADING
+========================= */
+
+
+#loading {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 20;
+
+
+    display: none;
+
+
+    justify-content: center;
+
+    align-items: center;
+
+
+    background: #05070d;
+
+    color: white;
+
+}
+
+
+
+.loading-content {
+
+    text-align: center;
+
+}
+
+
+
+.loading-title {
+
+    color: #168cff;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+}
+
+
+
+.loading-text {
+
+    margin-top: 10px;
+
+    font-size: 8px;
+
+}
+
+
+
+.loading-bar {
+
+    width: 180px;
+
+    height: 6px;
+
+    margin-top: 15px;
+
+    background: #17243b;
+
+}
+
+
+
+.loading-bar-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #168cff;
+
+}
+
 
 
 /* =========================
-   PAUSE
+   PAUSE BUTTON
 ========================= */
 
 
 #pause-button {
 
+    position: absolute;
 
-    position:absolute;
+    top: 10px;
 
-
-    top:20px;
-
-
-    right:25px;
+    right: 10px;
 
 
-    z-index:30;
+    display: none;
 
 
-    display:none;
+    width: 25px;
+
+    height: 25px;
 
 
-    width:42px;
+    background: black;
+
+    color: white;
 
 
-    height:42px;
-
-
-    border:2px solid white;
-
-
-    background:rgba(0,0,0,.5);
-
-
-    color:white;
-
-
-    font-weight:900;
-
-
-    font-size:18px;
-
+    border: 1px solid white;
 
 }
 
 
-
-
-
 /* =========================
-   MOBILE
+   SCALE GAME CLEANLY
 ========================= */
 
 
-@media(max-width:600px){
+@media (min-width: 500px) {
 
+    #game-container {
 
-    h1 {
-
-        font-size:50px;
-
-    }
-
-
-    .controls {
-
-        gap:10px;
+        transform: scale(2);
 
     }
 
+}
 
-    #start-button {
 
-        padding:13px 35px;
+@media (min-width: 900px) {
 
-        font-size:16px;
+    #game-container {
+
+        transform: scale(3);
 
     }
 
+}
+
+
+@media (min-width: 1300px) {
+
+    #game-container {
+
+        transform: scale(4);
+
+    }
 
 }
