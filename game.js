@@ -5,70 +5,33 @@ const startButton = document.getElementById("start-button");
 const titleScreen = document.getElementById("title-screen");
 const hud = document.getElementById("hud");
 
-
-// ==========================
-// SPRITES
-// ==========================
-
-const metalSprite = new Image();
-
-metalSprite.src = "sprites/idle.png";
-
-
-// ==========================
-// GAME STATE
-// ==========================
-
 let gameStarted = false;
+
+
+// ============================
+// SPRITES
+// ============================
+
+const sprites = {
+
+    idle: new Image(),
+    run: new Image(),
+    jump: new Image()
+
+};
+
+
+sprites.idle.src = "sprites/idle.png";
+sprites.run.src = "sprites/run.png";
+sprites.jump.src = "sprites/jump.png";
+
+
+// ============================
+// INPUT
+// ============================
 
 let keys = {};
 
-
-// ==========================
-// WORLD
-// ==========================
-
-const world = {
-    width: 3000,
-    ground: 190
-};
-
-
-// ==========================
-// METAL SONIC
-// ==========================
-
-const metal = {
-
-    x: 100,
-    y: 100,
-
-    width: 40,
-    height: 60,
-
-    velocityX: 0,
-    velocityY: 0,
-
-    speed: 6,
-    jumpPower: -11,
-
-    grounded: false
-
-};
-
-
-// ==========================
-// CAMERA
-// ==========================
-
-const camera = {
-    x: 0
-};
-
-
-// ==========================
-// INPUT
-// ==========================
 
 window.addEventListener(
     "keydown",
@@ -90,9 +53,56 @@ window.addEventListener(
 );
 
 
-// ==========================
-// START BUTTON
-// ==========================
+// ============================
+// WORLD
+// ============================
+
+const world = {
+
+    width: 4000,
+    ground: 190
+
+};
+
+
+// ============================
+// METAL SONIC
+// ============================
+
+const metal = {
+
+    x: 100,
+    y: 100,
+
+    width: 40,
+    height: 70,
+
+    velocityX: 0,
+    velocityY: 0,
+
+    speed: 6,
+
+    jumpPower: -11,
+
+    grounded: false
+
+};
+
+
+// ============================
+// CAMERA
+// ============================
+
+const camera = {
+
+    x: 0
+
+};
+
+
+// ============================
+// START GAME
+// ============================
 
 startButton.onclick = () => {
 
@@ -105,9 +115,9 @@ startButton.onclick = () => {
 };
 
 
-// ==========================
+// ============================
 // UPDATE
-// ==========================
+// ============================
 
 function update(){
 
@@ -124,11 +134,13 @@ function update(){
         metal.velocityX = metal.speed;
 
     }
+
     else if(keys["arrowleft"]){
 
         metal.velocityX = -metal.speed;
 
     }
+
     else {
 
         metal.velocityX *= 0.8;
@@ -164,7 +176,7 @@ function update(){
 
 
 
-    // Ground collision
+    // Ground
 
     if(
         metal.y + metal.height >= world.ground
@@ -192,6 +204,7 @@ function update(){
 
 
     if(camera.x > world.width - canvas.width)
+
         camera.x =
             world.width - canvas.width;
 
@@ -199,9 +212,37 @@ function update(){
 }
 
 
-// ==========================
+// ============================
+// GET CURRENT SPRITE
+// ============================
+
+function getMetalSprite(){
+
+
+    if(!metal.grounded){
+
+        return sprites.jump;
+
+    }
+
+
+    if(Math.abs(metal.velocityX) > 0.5){
+
+        return sprites.run;
+
+    }
+
+
+    return sprites.idle;
+
+
+}
+
+
+
+// ============================
 // DRAW
-// ==========================
+// ============================
 
 function draw(){
 
@@ -233,20 +274,19 @@ function draw(){
 
     ctx.fillStyle = "#294878";
 
-
     ctx.beginPath();
 
-    ctx.moveTo(0,170);
+    ctx.moveTo(0,180);
 
-    ctx.lineTo(300,50);
+    ctx.lineTo(300,60);
 
-    ctx.lineTo(600,170);
+    ctx.lineTo(600,180);
 
-    ctx.lineTo(900,50);
+    ctx.lineTo(900,60);
 
-    ctx.lineTo(1200,170);
+    ctx.lineTo(1200,180);
 
-    ctx.lineTo(0,170);
+    ctx.lineTo(0,180);
 
     ctx.fill();
 
@@ -254,7 +294,7 @@ function draw(){
 
     // Ground
 
-    ctx.fillStyle = "#26a83d";
+    ctx.fillStyle = "#29a844";
 
     ctx.fillRect(
         0,
@@ -264,7 +304,7 @@ function draw(){
     );
 
 
-    ctx.fillStyle = "#8b542c";
+    ctx.fillStyle = "#8b552d";
 
     ctx.fillRect(
         0,
@@ -275,31 +315,9 @@ function draw(){
 
 
 
-    // Metal Sonic sprite
+    // Rings
 
-    if(metalSprite.complete){
-
-        ctx.drawImage(
-
-            metalSprite,
-
-            metal.x - 15,
-
-            metal.y - 15,
-
-            70,
-
-            85
-
-        );
-
-    }
-
-
-
-    // Test rings
-
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < 6; i++){
 
         ctx.strokeStyle = "#ffd83d";
 
@@ -308,17 +326,11 @@ function draw(){
         ctx.beginPath();
 
         ctx.arc(
-
-            500 + i * 50,
-
+            500 + i * 55,
             140,
-
             15,
-
             0,
-
             Math.PI * 2
-
         );
 
         ctx.stroke();
@@ -327,24 +339,51 @@ function draw(){
 
 
 
+    // Metal Sonic
+
+    let sprite = getMetalSprite();
+
+
+    if(sprite.complete){
+
+        ctx.drawImage(
+
+            sprite,
+
+            metal.x - 20,
+
+            metal.y - 15,
+
+            80,
+
+            95
+
+        );
+
+    }
+
+
+
     ctx.restore();
+
 
 }
 
 
-// ==========================
-// LOOP
-// ==========================
 
-function loop(){
+// ============================
+// GAME LOOP
+// ============================
+
+function gameLoop(){
 
     update();
 
     draw();
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(gameLoop);
 
 }
 
 
-loop();
+gameLoop();
