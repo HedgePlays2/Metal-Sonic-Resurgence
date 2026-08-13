@@ -4,26 +4,42 @@
     box-sizing: border-box;
 }
 
+
 html,
 body {
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
     background: #000;
+
+    font-family: Arial, Helvetica, sans-serif;
+
 }
+
+
 
 body {
+
     display: flex;
-    align-items: center;
+
     justify-content: center;
+
+    align-items: center;
+
 }
 
 
-/* =========================================
+
+/* =========================
    GAME WINDOW
-========================================= */
+========================= */
+
 
 #game-container {
+
     position: relative;
 
     width: 100vw;
@@ -32,79 +48,96 @@ body {
     overflow: hidden;
 
     background: #000;
+
 }
 
 
-/* =========================================
-   GAME CANVAS
-========================================= */
+
+/* =========================
+   CANVAS
+========================= */
+
 
 #gameCanvas {
-    position: absolute;
 
-    width: 100%;
-    height: 100%;
+    position: absolute;
 
     left: 0;
     top: 0;
 
+
+    width: 100%;
+    height: 100%;
+
+
     display: block;
 
-    background: #5aa8e8;
-
-    /*
-       IMPORTANT:
-       Keep the game's 424x240 proportions.
-    */
-
-    object-fit: contain;
 
     image-rendering: pixelated;
-    image-rendering: crisp-edges;
+
 }
 
 
-/* =========================================
+
+/* =========================
    TITLE SCREEN
-========================================= */
+========================= */
+
 
 #title-screen {
+
     position: absolute;
 
     inset: 0;
 
+
     z-index: 10;
+
 
     display: flex;
 
-    align-items: center;
     justify-content: center;
+
+    align-items: center;
+
 
     text-align: center;
 
+
     background:
+
         radial-gradient(
-            circle at center,
-            #31558c,
-            #172746 50%,
+            circle,
+            #355d99,
+            #182946 50%,
             #05070d
         );
+
 }
 
 
+
 .title-content {
+
     display: flex;
 
     flex-direction: column;
 
     align-items: center;
 
-    justify-content: center;
 }
 
 
+
+/* =========================
+   LOGO TEXT
+========================= */
+
+
 .small-title {
+
     color: #168cff;
+
 
     font-size: clamp(
         20px,
@@ -112,22 +145,32 @@ body {
         42px
     );
 
+
     font-weight: 900;
 
     font-style: italic;
 
+
     letter-spacing: 8px;
 
+
     text-shadow:
+
         4px 4px 0 #000,
+
         0 0 25px #168cff;
+
 }
 
 
+
 h1 {
+
     margin-top: 5px;
 
+
     color: white;
+
 
     font-size: clamp(
         50px,
@@ -135,24 +178,35 @@ h1 {
         120px
     );
 
+
     font-weight: 900;
 
     font-style: italic;
 
-    line-height: 0.85;
 
-    letter-spacing: -5px;
+    line-height: .85;
+
+
+    letter-spacing: -6px;
+
 
     text-shadow:
+
         7px 7px 0 #000,
+
         0 0 35px #168cff;
+
 }
 
 
+
 .subtitle {
+
     margin-top: 20px;
 
+
     color: #c5d4ec;
+
 
     font-size: clamp(
         9px,
@@ -160,308 +214,447 @@ h1 {
         15px
     );
 
+
     font-weight: bold;
 
+
     letter-spacing: 4px;
+
 }
 
 
-/* =========================================
-   START BUTTON
-========================================= */
+
+/* =========================
+   BUTTON
+========================= */
+
 
 #start-button {
+
+
     margin-top: 40px;
 
-    min-width: 230px;
 
-    padding: 15px 45px;
+    padding:
 
-    border: 3px solid white;
+        16px 50px;
+
+
+    border:
+
+        3px solid white;
+
 
     border-radius: 5px;
 
+
     background: #168cff;
 
-    color: white;
+
+    color:white;
+
 
     font-size: 20px;
 
-    font-weight: 900;
 
-    letter-spacing: 3px;
+    font-weight:900;
 
-    cursor: pointer;
+
+    letter-spacing:3px;
+
+
+    cursor:pointer;
+
+
 
     box-shadow:
+
         0 7px 0 #07519b,
-        0 0 30px rgba(
-            22,
-            140,
-            255,
-            0.7
-        );
+
+        0 0 30px #168cff;
+
+
 }
+
 
 
 #start-button:hover {
-    background: #42a7ff;
+
+
+    background:#42a7ff;
+
+
 }
+
 
 
 #start-button:active {
-    transform: translateY(5px);
+
+
+    transform:translateY(5px);
+
 
     box-shadow:
+
         0 2px 0 #07519b;
+
+
 }
 
 
-/* =========================================
+
+/* =========================
    CONTROLS
-========================================= */
+========================= */
+
 
 .controls {
-    display: flex;
 
-    gap: 25px;
 
-    margin-top: 30px;
+    display:flex;
 
-    color: white;
 
-    font-size: 10px;
+    gap:25px;
 
-    font-weight: bold;
+
+    margin-top:30px;
+
+
+    color:white;
+
+
+    font-size:10px;
+
+
+    font-weight:bold;
+
+
 }
+
 
 
 .controls div {
-    display: flex;
 
-    flex-direction: column;
 
-    align-items: center;
+    display:flex;
 
-    gap: 4px;
+
+    flex-direction:column;
+
+
 }
+
 
 
 .controls span {
-    color: #8194b5;
 
-    font-size: 8px;
 
-    letter-spacing: 1px;
+    color:#8fa4c7;
+
+
+    font-size:8px;
+
+
+    margin-top:3px;
+
+
 }
+
 
 
 .version {
-    margin-top: 25px;
 
-    color: #526783;
 
-    font-size: 8px;
+    margin-top:25px;
 
-    letter-spacing: 3px;
+
+    color:#667995;
+
+
+    font-size:8px;
+
+
+    letter-spacing:3px;
+
+
 }
 
 
-/* =========================================
-   LOADING SCREEN
-========================================= */
+
+
+
+/* =========================
+   LOADING
+========================= */
+
 
 #loading {
-    position: absolute;
 
-    inset: 0;
 
-    z-index: 20;
+    position:absolute;
 
-    display: none;
 
-    align-items: center;
-    justify-content: center;
+    inset:0;
 
-    background: #05070d;
 
-    color: white;
+    z-index:20;
+
+
+    display:none;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    background:#05070d;
+
+
+    color:white;
+
+
 }
+
 
 
 .loading-content {
-    width: 280px;
 
-    text-align: center;
+
+    text-align:center;
+
+
 }
+
 
 
 .loading-title {
-    color: #168cff;
 
-    font-size: 24px;
 
-    font-weight: 900;
+    color:#168cff;
 
-    font-style: italic;
 
-    letter-spacing: 4px;
+    font-size:25px;
+
+
+    font-weight:900;
+
+
+    font-style:italic;
+
+
 }
+
 
 
 .loading-text {
-    margin-top: 10px;
 
-    color: #9aa9c4;
 
-    font-size: 10px;
+    margin-top:10px;
 
-    letter-spacing: 2px;
+
+    color:#9aa9c4;
+
+
+    font-size:10px;
+
+
+    letter-spacing:2px;
+
+
 }
+
 
 
 .loading-bar {
-    width: 100%;
 
-    height: 8px;
 
-    margin-top: 18px;
+    width:280px;
 
-    background: #17243b;
 
-    border: 1px solid #304568;
+    height:8px;
+
+
+    margin-top:20px;
+
+
+    background:#18263d;
+
+
 }
+
 
 
 .loading-bar-fill {
-    width: 0%;
 
-    height: 100%;
 
-    background: #168cff;
+    height:100%;
+
+
+    width:0%;
+
+
+    background:#168cff;
+
+
 }
 
 
-/* =========================================
+
+
+
+/* =========================
    HUD
-========================================= */
+========================= */
+
 
 #hud {
-    position: absolute;
 
-    top: 20px;
-    left: 25px;
 
-    z-index: 5;
+    position:absolute;
 
-    display: none;
 
-    color: white;
+    top:20px;
 
-    font-weight: bold;
+
+    left:25px;
+
+
+    z-index:5;
+
+
+    display:none;
+
+
+    color:white;
+
+
+    font-weight:bold;
+
 
     text-shadow:
+
         3px 3px 0 #000;
+
+
 }
+
 
 
 .hud-character {
-    margin-bottom: 7px;
 
-    color: #168cff;
 
-    font-size: 14px;
+    color:#168cff;
 
-    letter-spacing: 2px;
+
+    margin-bottom:8px;
+
+
+    font-size:14px;
+
+
 }
+
 
 
 .hud-row {
-    display: flex;
 
-    justify-content: space-between;
 
-    gap: 30px;
+    display:flex;
 
-    font-size: 16px;
+
+    gap:30px;
+
+
+    font-size:16px;
+
+
 }
 
 
-/* =========================================
+
+
+
+/* =========================
    PAUSE
-========================================= */
+========================= */
+
 
 #pause-button {
-    position: absolute;
 
-    top: 20px;
-    right: 25px;
 
-    z-index: 30;
+    position:absolute;
 
-    display: none;
 
-    width: 42px;
-    height: 42px;
+    top:20px;
 
-    border: 2px solid white;
 
-    background: rgba(
-        0,
-        0,
-        0,
-        0.5
-    );
+    right:25px;
 
-    color: white;
 
-    font-size: 18px;
+    z-index:30;
 
-    font-weight: 900;
 
-    cursor: pointer;
+    display:none;
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    border:2px solid white;
+
+
+    background:rgba(0,0,0,.5);
+
+
+    color:white;
+
+
+    font-weight:900;
+
+
+    font-size:18px;
+
+
 }
 
 
-/* =========================================
+
+
+
+/* =========================
    MOBILE
-========================================= */
+========================= */
 
-@media (max-width: 600px) {
 
-    .small-title {
-        font-size: 18px;
+@media(max-width:600px){
 
-        letter-spacing: 4px;
-    }
 
     h1 {
-        font-size: 50px;
 
-        letter-spacing: -3px;
+        font-size:50px;
+
     }
 
-    .subtitle {
-        font-size: 8px;
-
-        letter-spacing: 2px;
-    }
-
-    #start-button {
-        min-width: 180px;
-
-        padding: 13px 30px;
-
-        font-size: 16px;
-    }
 
     .controls {
-        gap: 10px;
 
-        font-size: 8px;
+        gap:10px;
+
     }
 
-    .controls span {
-        font-size: 6px;
+
+    #start-button {
+
+        padding:13px 35px;
+
+        font-size:16px;
+
     }
+
+
 }
