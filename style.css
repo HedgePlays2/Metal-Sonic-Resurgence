@@ -7,16 +7,14 @@
 
 html,
 body {
-
     width: 100%;
     height: 100%;
 
-    overflow: hidden;
-
     background: #000;
 
-    font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
 
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 
@@ -34,7 +32,7 @@ body {
 
 
 /* =========================
-   GAME WINDOW
+   GAME SCREEN
 ========================= */
 
 
@@ -43,36 +41,34 @@ body {
     position: relative;
 
     width: 424px;
-    height: 240px;
 
-    background: #000;
+    height: 240px;
 
     overflow: hidden;
 
-    image-rendering: pixelated;
+    background: black;
 
 }
 
-
-
-/* =========================
-   GAME CANVAS
-========================= */
 
 
 #gameCanvas {
 
     position: absolute;
 
-    width: 424px;
-    height: 240px;
-
     left: 0;
+
     top: 0;
 
-    display: block;
+
+    width: 424px;
+
+    height: 240px;
+
 
     image-rendering: pixelated;
+
+    display: block;
 
 }
 
@@ -87,15 +83,22 @@ body {
 
     position: absolute;
 
-    inset: 0;
+    left: 0;
 
-    z-index: 10;
+    top: 0;
+
+
+    width: 424px;
+
+    height: 240px;
+
 
     display: flex;
 
     justify-content: center;
 
     align-items: center;
+
 
     text-align: center;
 
@@ -105,7 +108,7 @@ body {
         radial-gradient(
             circle,
             #355d99,
-            #182946 55%,
+            #182946,
             #05070d
         );
 
@@ -129,18 +132,13 @@ body {
 
     color: #168cff;
 
-    font-size: 22px;
+    font-size: 18px;
 
-    font-weight: 900;
+    font-weight: bold;
 
     font-style: italic;
 
-    letter-spacing: 5px;
-
-
-    text-shadow:
-
-        3px 3px 0 #000;
+    letter-spacing: 4px;
 
 }
 
@@ -148,24 +146,21 @@ body {
 
 h1 {
 
-    margin-top: 5px;
-
     color: white;
 
-    font-size: 55px;
+    font-size: 45px;
+
+    font-style: italic;
 
     font-weight: 900;
 
-    font-style: italic;
 
     line-height: .8;
 
 
     text-shadow:
 
-        5px 5px 0 #000,
-
-        0 0 20px #168cff;
+        4px 4px 0 black;
 
 }
 
@@ -173,13 +168,11 @@ h1 {
 
 .subtitle {
 
-    margin-top: 15px;
+    margin-top: 12px;
 
     color: #c5d4ec;
 
-    font-size: 10px;
-
-    font-weight: bold;
+    font-size: 8px;
 
     letter-spacing: 2px;
 
@@ -194,9 +187,15 @@ h1 {
 
 #start-button {
 
-    margin-top: 25px;
+    margin-top: 20px;
 
-    padding: 10px 35px;
+
+    padding: 8px 30px;
+
+
+    background: #168cff;
+
+    color: white;
 
 
     border:
@@ -204,16 +203,9 @@ h1 {
         2px solid white;
 
 
-    background: #168cff;
+    font-size: 12px;
 
-
-    color: white;
-
-
-    font-size: 14px;
-
-
-    font-weight: 900;
+    font-weight: bold;
 
 
     cursor: pointer;
@@ -230,6 +222,7 @@ h1 {
 #start-button:active {
 
     transform: translateY(3px);
+
 
     box-shadow:
 
@@ -250,11 +243,13 @@ h1 {
 
     gap: 12px;
 
-    margin-top: 18px;
+
+    margin-top: 15px;
+
 
     color: white;
 
-    font-size: 8px;
+    font-size: 7px;
 
 }
 
@@ -272,7 +267,7 @@ h1 {
 
 .controls span {
 
-    color: #8fa4c7;
+    color: #9aa9c4;
 
     font-size: 6px;
 
@@ -282,13 +277,11 @@ h1 {
 
 .version {
 
-    margin-top: 15px;
+    margin-top: 12px;
 
     color: #667995;
 
-    font-size: 7px;
-
-    letter-spacing: 2px;
+    font-size: 6px;
 
 }
 
@@ -303,11 +296,10 @@ h1 {
 
     position: absolute;
 
-    top: 10px;
 
-    left: 12px;
+    top: 8px;
 
-    z-index: 5;
+    left: 10px;
 
 
     display: none;
@@ -315,12 +307,16 @@ h1 {
 
     color: white;
 
+
     font-size: 10px;
+
+
+    z-index: 5;
 
 
     text-shadow:
 
-        2px 2px 0 #000;
+        2px 2px 0 black;
 
 }
 
@@ -332,8 +328,6 @@ h1 {
 
     font-weight: bold;
 
-    margin-bottom: 5px;
-
 }
 
 
@@ -342,7 +336,7 @@ h1 {
 
     display: flex;
 
-    gap: 20px;
+    gap: 15px;
 
 }
 
@@ -357,9 +351,15 @@ h1 {
 
     position: absolute;
 
-    inset: 0;
 
-    z-index: 20;
+    left: 0;
+
+    top: 0;
+
+
+    width: 424px;
+
+    height: 240px;
 
 
     display: none;
@@ -371,6 +371,7 @@ h1 {
 
 
     background: #05070d;
+
 
     color: white;
 
@@ -390,8 +391,6 @@ h1 {
 
     color: #168cff;
 
-    font-size: 20px;
-
     font-weight: bold;
 
 }
@@ -400,7 +399,7 @@ h1 {
 
 .loading-text {
 
-    margin-top: 10px;
+    margin-top: 8px;
 
     font-size: 8px;
 
@@ -410,11 +409,13 @@ h1 {
 
 .loading-bar {
 
-    width: 180px;
+    width: 150px;
 
     height: 6px;
 
-    margin-top: 15px;
+
+    margin-top: 12px;
+
 
     background: #17243b;
 
@@ -424,9 +425,10 @@ h1 {
 
 .loading-bar-fill {
 
+    width: 0%;
+
     height: 100%;
 
-    width: 0%;
 
     background: #168cff;
 
@@ -435,7 +437,7 @@ h1 {
 
 
 /* =========================
-   PAUSE BUTTON
+   PAUSE
 ========================= */
 
 
@@ -443,9 +445,10 @@ h1 {
 
     position: absolute;
 
-    top: 10px;
 
-    right: 10px;
+    top: 8px;
+
+    right: 8px;
 
 
     display: none;
@@ -458,47 +461,10 @@ h1 {
 
     background: black;
 
+
     color: white;
 
 
     border: 1px solid white;
-
-}
-
-
-/* =========================
-   SCALE GAME CLEANLY
-========================= */
-
-
-@media (min-width: 500px) {
-
-    #game-container {
-
-        transform: scale(2);
-
-    }
-
-}
-
-
-@media (min-width: 900px) {
-
-    #game-container {
-
-        transform: scale(3);
-
-    }
-
-}
-
-
-@media (min-width: 1300px) {
-
-    #game-container {
-
-        transform: scale(4);
-
-    }
 
 }
