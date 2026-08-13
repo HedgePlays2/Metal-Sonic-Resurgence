@@ -1,375 +1,359 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
+
 const startButton = document.getElementById("start-button");
 const titleScreen = document.getElementById("title-screen");
 const hud = document.getElementById("hud");
 
+
 let gameStarted = false;
+
 
 let keys = {};
 
 
-// =========================
+
 // SPRITES
-// =========================
 
 const sprites = {
-    idle: new Image(),
-    run: new Image(),
-    jump: new Image()
+
+    idle:new Image(),
+
+    run:new Image(),
+
+    jump:new Image()
+
 };
 
-sprites.idle.src = "sprites/idle.png";
-sprites.run.src = "sprites/run.png";
-sprites.jump.src = "sprites/jump.png";
+
+sprites.idle.src="sprites/idle.png";
+sprites.run.src="sprites/run.png";
+sprites.jump.src="sprites/jump.png";
 
 
-// =========================
+
+
 // WORLD
-// =========================
 
 const world = {
 
-    width: 3000,
+    width:3000,
 
-    ground: 200
+    ground:200
 
 };
 
 
-// =========================
+
+
 // METAL SONIC
-// =========================
 
 const metal = {
 
-    x: 80,
-    y: 120,
+    x:80,
 
-    width: 32,
-    height: 48,
+    y:120,
 
-    velocityX: 0,
-    velocityY: 0,
 
-    speed: 4,
+    width:32,
 
-    jumpPower: -9,
+    height:45,
 
-    grounded: false
+
+    velocityX:0,
+
+    velocityY:0,
+
+
+    speed:4,
+
+    jumpPower:-9,
+
+
+    grounded:false
 
 };
 
 
-// =========================
+
+
 // CAMERA
-// =========================
 
-const camera = {
+let camera = {
 
-    x: 0
+    x:0
 
 };
 
 
-// =========================
+
+
 // RINGS
-// =========================
 
 const rings = [
 
     {x:300,y:150},
+
     {x:350,y:150},
+
     {x:400,y:150},
-    {x:600,y:150},
-    {x:650,y:150}
+
+    {x:500,y:150}
 
 ];
 
 
 
-// =========================
+
 // INPUT
-// =========================
 
 window.addEventListener(
-    "keydown",
-    e => {
+"keydown",
+e=>{
 
-        keys[e.key.toLowerCase()] = true;
+keys[e.key.toLowerCase()]=true;
 
-    }
-);
+});
 
 
 window.addEventListener(
-    "keyup",
-    e => {
+"keyup",
+e=>{
 
-        keys[e.key.toLowerCase()] = false;
+keys[e.key.toLowerCase()]=false;
 
-    }
-);
-
+});
 
 
-// =========================
+
+
 // START
-// =========================
 
-startButton.onclick = () => {
+startButton.onclick=()=>{
 
-    gameStarted = true;
+gameStarted=true;
 
-    titleScreen.style.display = "none";
+titleScreen.style.display="none";
 
-    hud.style.display = "block";
+hud.style.display="block";
 
 };
 
 
 
-// =========================
+
 // UPDATE
-// =========================
 
 function update(){
 
-    if(!gameStarted)
-        return;
+
+if(!gameStarted)
+return;
 
 
 
-    // movement
+// movement
 
-    if(keys["arrowright"]){
-
-        metal.velocityX = metal.speed;
-
-    }
-
-    else if(keys["arrowleft"]){
-
-        metal.velocityX = -metal.speed;
-
-    }
-
-    else {
-
-        metal.velocityX *= 0.8;
-
-    }
+if(keys["arrowright"])
+metal.velocityX=metal.speed;
 
 
-    metal.x += metal.velocityX;
+else if(keys["arrowleft"])
+metal.velocityX=-metal.speed;
+
+
+else
+metal.velocityX*=0.8;
 
 
 
-    // jump
-
-    if(
-        keys[" "] &&
-        metal.grounded
-    ){
-
-        metal.velocityY = metal.jumpPower;
-
-        metal.grounded = false;
-
-    }
+metal.x+=metal.velocityX;
 
 
 
-    // gravity
 
-    metal.velocityY += 0.45;
+// jump
 
-    metal.y += metal.velocityY;
+if(keys[" "] && metal.grounded){
 
+metal.velocityY=-9;
 
-
-    // ground collision
-
-    if(
-        metal.y + metal.height >= world.ground
-    ){
-
-        metal.y =
-            world.ground - metal.height;
-
-        metal.velocityY = 0;
-
-        metal.grounded = true;
-
-    }
-
-
-
-    // camera
-
-    camera.x =
-        metal.x - canvas.width / 2;
-
-
-    if(camera.x < 0)
-        camera.x = 0;
-
+metal.grounded=false;
 
 }
 
 
 
-// =========================
-// CURRENT SPRITE
-// =========================
+// gravity
+
+metal.velocityY+=0.45;
+
+metal.y+=metal.velocityY;
+
+
+
+
+// ground
+
+if(
+metal.y+metal.height >= world.ground
+){
+
+metal.y=world.ground-metal.height;
+
+metal.velocityY=0;
+
+metal.grounded=true;
+
+}
+
+
+
+
+// camera
+
+camera.x=metal.x-212;
+
+
+if(camera.x<0)
+camera.x=0;
+
+}
+
+
+
+
+// SPRITE
 
 function getSprite(){
 
-    if(!metal.grounded)
-        return sprites.jump;
+if(!metal.grounded)
+return sprites.jump;
 
 
-    if(Math.abs(metal.velocityX) > 0.2)
-        return sprites.run;
+if(Math.abs(metal.velocityX)>0.2)
+return sprites.run;
 
 
-    return sprites.idle;
+return sprites.idle;
 
 }
 
 
 
-// =========================
+
 // DRAW
-// =========================
 
 function draw(){
 
 
-    // sky
 
-    ctx.fillStyle = "#4da6ff";
+ctx.fillStyle="#5db8ff";
 
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-
-    ctx.save();
-
-
-    ctx.translate(
-        -camera.x,
-        0
-    );
+ctx.fillRect(
+0,
+0,
+424,
+240
+);
 
 
 
-    // ground
+ctx.save();
 
-    ctx.fillStyle = "#35b34a";
 
-    ctx.fillRect(
-        0,
-        world.ground,
-        world.width,
-        40
-    );
+ctx.translate(
+-camera.x,
+0
+);
 
 
 
-    ctx.fillStyle = "#8b5a2b";
+// ground
 
-    ctx.fillRect(
-        0,
-        world.ground + 20,
-        world.width,
-        40
-    );
+ctx.fillStyle="#32b34a";
 
-
-
-    // rings
-
-    for(let ring of rings){
-
-        ctx.strokeStyle = "#ffd83d";
-
-        ctx.lineWidth = 2;
-
-
-        ctx.beginPath();
-
-        ctx.arc(
-
-            ring.x,
-
-            ring.y,
-
-            7,
-
-            0,
-
-            Math.PI * 2
-
-        );
-
-
-        ctx.stroke();
-
-    }
+ctx.fillRect(
+0,
+world.ground,
+world.width,
+40
+);
 
 
 
+// rings
 
-    // Metal Sonic
+for(let ring of rings){
 
-    let sprite = getSprite();
+ctx.strokeStyle="#ffd83d";
 
-
-    if(sprite.complete){
-
-        ctx.drawImage(
-
-            sprite,
-
-            metal.x - 4,
-
-            metal.y - 8,
-
-            40,
-
-            55
-
-        );
-
-    }
+ctx.lineWidth=1.5;
 
 
+ctx.beginPath();
 
-    ctx.restore();
+ctx.arc(
+
+ring.x,
+
+ring.y,
+
+4,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.stroke();
+
+}
+
+
+
+// metal
+
+let sprite=getSprite();
+
+
+if(sprite.complete){
+
+ctx.drawImage(
+
+sprite,
+
+metal.x-2,
+
+metal.y-4,
+
+32,
+
+45
+
+);
+
+}
+
+
+ctx.restore();
 
 
 }
 
 
 
-// =========================
 // LOOP
-// =========================
 
 function loop(){
 
-    update();
+update();
 
-    draw();
+draw();
 
-    requestAnimationFrame(loop);
+requestAnimationFrame(loop);
 
 }
 
