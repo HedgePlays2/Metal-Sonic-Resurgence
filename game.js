@@ -1,389 +1,660 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-
-const startButton = document.getElementById("start-button");
-const titleScreen = document.getElementById("title-screen");
-const hud = document.getElementById("hud");
-
-let gameStarted = false;
-
-
-// ============================
-// SPRITES
-// ============================
-
-const sprites = {
-
-    idle: new Image(),
-    run: new Image(),
-    jump: new Image()
-
-};
-
-
-sprites.idle.src = "sprites/idle.png";
-sprites.run.src = "sprites/run.png";
-sprites.jump.src = "sprites/jump.png";
-
-
-// ============================
-// INPUT
-// ============================
-
-let keys = {};
-
-
-window.addEventListener(
-    "keydown",
-    e => {
-
-        keys[e.key.toLowerCase()] = true;
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    e => {
-
-        keys[e.key.toLowerCase()] = false;
-
-    }
-);
-
-
-// ============================
-// WORLD
-// ============================
-
-const world = {
-
-    width: 4000,
-    ground: 190
-
-};
-
-
-// ============================
-// METAL SONIC
-// ============================
-
-const metal = {
-
-    x: 100,
-    y: 100,
-
-    width: 40,
-    height: 70,
-
-    velocityX: 0,
-    velocityY: 0,
-
-    speed: 6,
-
-    jumpPower: -11,
-
-    grounded: false
-
-};
-
-
-// ============================
-// CAMERA
-// ============================
-
-const camera = {
-
-    x: 0
-
-};
-
-
-// ============================
-// START GAME
-// ============================
-
-startButton.onclick = () => {
-
-    gameStarted = true;
-
-    titleScreen.style.display = "none";
-
-    hud.style.display = "block";
-
-};
-
-
-// ============================
-// UPDATE
-// ============================
-
-function update(){
-
-
-    if(!gameStarted)
-        return;
-
-
-
-    // Movement
-
-    if(keys["arrowright"]){
-
-        metal.velocityX = metal.speed;
-
-    }
-
-    else if(keys["arrowleft"]){
-
-        metal.velocityX = -metal.speed;
-
-    }
-
-    else {
-
-        metal.velocityX *= 0.8;
-
-    }
-
-
-
-    metal.x += metal.velocityX;
-
-
-
-    // Jump
-
-    if(
-        keys[" "] &&
-        metal.grounded
-    ){
-
-        metal.velocityY = metal.jumpPower;
-
-        metal.grounded = false;
-
-    }
-
-
-
-    // Gravity
-
-    metal.velocityY += 0.5;
-
-    metal.y += metal.velocityY;
-
-
-
-    // Ground
-
-    if(
-        metal.y + metal.height >= world.ground
-    ){
-
-        metal.y =
-            world.ground - metal.height;
-
-        metal.velocityY = 0;
-
-        metal.grounded = true;
-
-    }
-
-
-
-    // Camera
-
-    camera.x =
-        metal.x - canvas.width / 2;
-
-
-    if(camera.x < 0)
-        camera.x = 0;
-
-
-    if(camera.x > world.width - canvas.width)
-
-        camera.x =
-            world.width - canvas.width;
-
-
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 
-// ============================
-// GET CURRENT SPRITE
-// ============================
+html,
+body {
 
-function getMetalSprite(){
+    width: 100%;
+    height: 100%;
 
+    overflow: hidden;
 
-    if(!metal.grounded){
+    background: #000;
 
-        return sprites.jump;
-
-    }
-
-
-    if(Math.abs(metal.velocityX) > 0.5){
-
-        return sprites.run;
-
-    }
-
-
-    return sprites.idle;
-
+    font-family: Arial, Helvetica, sans-serif;
 
 }
 
 
 
-// ============================
-// DRAW
-// ============================
+body {
 
-function draw(){
+    display: flex;
 
+    justify-content: center;
 
-    // Sky
+    align-items: center;
 
-    ctx.fillStyle = "#1c315b";
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
+}
 
 
 
-    ctx.save();
+/* =========================
+   GAME WINDOW
+========================= */
 
 
-    ctx.translate(
-        -camera.x,
-        0
-    );
+#game-container {
 
+    position: relative;
 
+    width: 100vw;
+    height: 100vh;
 
-    // Mountains
+    overflow: hidden;
 
-    ctx.fillStyle = "#294878";
+    background: #000;
 
-    ctx.beginPath();
-
-    ctx.moveTo(0,180);
-
-    ctx.lineTo(300,60);
-
-    ctx.lineTo(600,180);
-
-    ctx.lineTo(900,60);
-
-    ctx.lineTo(1200,180);
-
-    ctx.lineTo(0,180);
-
-    ctx.fill();
+}
 
 
 
-    // Ground
-
-    ctx.fillStyle = "#29a844";
-
-    ctx.fillRect(
-        0,
-        world.ground,
-        world.width,
-        100
-    );
+/* =========================
+   CANVAS
+========================= */
 
 
-    ctx.fillStyle = "#8b552d";
+#gameCanvas {
 
-    ctx.fillRect(
-        0,
-        world.ground + 25,
-        world.width,
-        100
-    );
+    position: absolute;
+
+    left: 0;
+    top: 0;
 
 
+    width: 100%;
+    height: 100%;
 
-    // Rings
 
-    for(let i = 0; i < 6; i++){
+    display: block;
 
-        ctx.strokeStyle = "#ffd83d";
 
-        ctx.lineWidth = 5;
+    image-rendering: pixelated;
 
-        ctx.beginPath();
+}
 
-        ctx.arc(
-            500 + i * 55,
-            140,
-            15,
-            0,
-            Math.PI * 2
+
+
+/* =========================
+   TITLE SCREEN
+========================= */
+
+
+#title-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+
+    z-index: 10;
+
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+
+    text-align: center;
+
+
+    background:
+
+        radial-gradient(
+            circle,
+            #355d99,
+            #182946 50%,
+            #05070d
         );
 
-        ctx.stroke();
-
-    }
+}
 
 
 
-    // Metal Sonic
+.title-content {
 
-    let sprite = getMetalSprite();
+    display: flex;
 
+    flex-direction: column;
 
-    if(sprite.complete){
+    align-items: center;
 
-        ctx.drawImage(
-
-            sprite,
-
-            metal.x - 20,
-
-            metal.y - 15,
-
-            80,
-
-            95
-
-        );
-
-    }
+}
 
 
 
-    ctx.restore();
+/* =========================
+   LOGO TEXT
+========================= */
+
+
+.small-title {
+
+    color: #168cff;
+
+
+    font-size: clamp(
+        20px,
+        4vw,
+        42px
+    );
+
+
+    font-weight: 900;
+
+    font-style: italic;
+
+
+    letter-spacing: 8px;
+
+
+    text-shadow:
+
+        4px 4px 0 #000,
+
+        0 0 25px #168cff;
+
+}
+
+
+
+h1 {
+
+    margin-top: 5px;
+
+
+    color: white;
+
+
+    font-size: clamp(
+        50px,
+        10vw,
+        120px
+    );
+
+
+    font-weight: 900;
+
+    font-style: italic;
+
+
+    line-height: .85;
+
+
+    letter-spacing: -6px;
+
+
+    text-shadow:
+
+        7px 7px 0 #000,
+
+        0 0 35px #168cff;
+
+}
+
+
+
+.subtitle {
+
+    margin-top: 20px;
+
+
+    color: #c5d4ec;
+
+
+    font-size: clamp(
+        9px,
+        1.4vw,
+        15px
+    );
+
+
+    font-weight: bold;
+
+
+    letter-spacing: 4px;
+
+}
+
+
+
+/* =========================
+   BUTTON
+========================= */
+
+
+#start-button {
+
+
+    margin-top: 40px;
+
+
+    padding:
+
+        16px 50px;
+
+
+    border:
+
+        3px solid white;
+
+
+    border-radius: 5px;
+
+
+    background: #168cff;
+
+
+    color:white;
+
+
+    font-size: 20px;
+
+
+    font-weight:900;
+
+
+    letter-spacing:3px;
+
+
+    cursor:pointer;
+
+
+
+    box-shadow:
+
+        0 7px 0 #07519b,
+
+        0 0 30px #168cff;
 
 
 }
 
 
 
-// ============================
-// GAME LOOP
-// ============================
+#start-button:hover {
 
-function gameLoop(){
 
-    update();
+    background:#42a7ff;
 
-    draw();
-
-    requestAnimationFrame(gameLoop);
 
 }
 
 
-gameLoop();
+
+#start-button:active {
+
+
+    transform:translateY(5px);
+
+
+    box-shadow:
+
+        0 2px 0 #07519b;
+
+
+}
+
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+
+.controls {
+
+
+    display:flex;
+
+
+    gap:25px;
+
+
+    margin-top:30px;
+
+
+    color:white;
+
+
+    font-size:10px;
+
+
+    font-weight:bold;
+
+
+}
+
+
+
+.controls div {
+
+
+    display:flex;
+
+
+    flex-direction:column;
+
+
+}
+
+
+
+.controls span {
+
+
+    color:#8fa4c7;
+
+
+    font-size:8px;
+
+
+    margin-top:3px;
+
+
+}
+
+
+
+.version {
+
+
+    margin-top:25px;
+
+
+    color:#667995;
+
+
+    font-size:8px;
+
+
+    letter-spacing:3px;
+
+
+}
+
+
+
+
+
+/* =========================
+   LOADING
+========================= */
+
+
+#loading {
+
+
+    position:absolute;
+
+
+    inset:0;
+
+
+    z-index:20;
+
+
+    display:none;
+
+
+    justify-content:center;
+
+
+    align-items:center;
+
+
+    background:#05070d;
+
+
+    color:white;
+
+
+}
+
+
+
+.loading-content {
+
+
+    text-align:center;
+
+
+}
+
+
+
+.loading-title {
+
+
+    color:#168cff;
+
+
+    font-size:25px;
+
+
+    font-weight:900;
+
+
+    font-style:italic;
+
+
+}
+
+
+
+.loading-text {
+
+
+    margin-top:10px;
+
+
+    color:#9aa9c4;
+
+
+    font-size:10px;
+
+
+    letter-spacing:2px;
+
+
+}
+
+
+
+.loading-bar {
+
+
+    width:280px;
+
+
+    height:8px;
+
+
+    margin-top:20px;
+
+
+    background:#18263d;
+
+
+}
+
+
+
+.loading-bar-fill {
+
+
+    height:100%;
+
+
+    width:0%;
+
+
+    background:#168cff;
+
+
+}
+
+
+
+
+
+/* =========================
+   HUD
+========================= */
+
+
+#hud {
+
+
+    position:absolute;
+
+
+    top:20px;
+
+
+    left:25px;
+
+
+    z-index:5;
+
+
+    display:none;
+
+
+    color:white;
+
+
+    font-weight:bold;
+
+
+    text-shadow:
+
+        3px 3px 0 #000;
+
+
+}
+
+
+
+.hud-character {
+
+
+    color:#168cff;
+
+
+    margin-bottom:8px;
+
+
+    font-size:14px;
+
+
+}
+
+
+
+.hud-row {
+
+
+    display:flex;
+
+
+    gap:30px;
+
+
+    font-size:16px;
+
+
+}
+
+
+
+
+
+/* =========================
+   PAUSE
+========================= */
+
+
+#pause-button {
+
+
+    position:absolute;
+
+
+    top:20px;
+
+
+    right:25px;
+
+
+    z-index:30;
+
+
+    display:none;
+
+
+    width:42px;
+
+
+    height:42px;
+
+
+    border:2px solid white;
+
+
+    background:rgba(0,0,0,.5);
+
+
+    color:white;
+
+
+    font-weight:900;
+
+
+    font-size:18px;
+
+
+}
+
+
+
+
+
+/* =========================
+   MOBILE
+========================= */
+
+
+@media(max-width:600px){
+
+
+    h1 {
+
+        font-size:50px;
+
+    }
+
+
+    .controls {
+
+        gap:10px;
+
+    }
+
+
+    #start-button {
+
+        padding:13px 35px;
+
+        font-size:16px;
+
+    }
+
+
+}
