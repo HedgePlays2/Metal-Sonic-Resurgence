@@ -1,660 +1,377 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const startButton = document.getElementById("start-button");
+const titleScreen = document.getElementById("title-screen");
+const hud = document.getElementById("hud");
+
+let gameStarted = false;
+
+let keys = {};
+
+
+// =========================
+// SPRITES
+// =========================
+
+const sprites = {
+    idle: new Image(),
+    run: new Image(),
+    jump: new Image()
+};
+
+sprites.idle.src = "sprites/idle.png";
+sprites.run.src = "sprites/run.png";
+sprites.jump.src = "sprites/jump.png";
+
+
+// =========================
+// WORLD
+// =========================
+
+const world = {
+
+    width: 3000,
+
+    ground: 200
+
+};
+
+
+// =========================
+// METAL SONIC
+// =========================
+
+const metal = {
+
+    x: 80,
+    y: 120,
+
+    width: 32,
+    height: 48,
+
+    velocityX: 0,
+    velocityY: 0,
+
+    speed: 4,
+
+    jumpPower: -9,
+
+    grounded: false
+
+};
+
+
+// =========================
+// CAMERA
+// =========================
+
+const camera = {
+
+    x: 0
+
+};
+
+
+// =========================
+// RINGS
+// =========================
+
+const rings = [
+
+    {x:300,y:150},
+    {x:350,y:150},
+    {x:400,y:150},
+    {x:600,y:150},
+    {x:650,y:150}
+
+];
+
+
+
+// =========================
+// INPUT
+// =========================
+
+window.addEventListener(
+    "keydown",
+    e => {
+
+        keys[e.key.toLowerCase()] = true;
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e => {
+
+        keys[e.key.toLowerCase()] = false;
+
+    }
+);
+
+
+
+// =========================
+// START
+// =========================
+
+startButton.onclick = () => {
+
+    gameStarted = true;
+
+    titleScreen.style.display = "none";
+
+    hud.style.display = "block";
+
+};
+
+
+
+// =========================
+// UPDATE
+// =========================
+
+function update(){
+
+    if(!gameStarted)
+        return;
+
+
+
+    // movement
+
+    if(keys["arrowright"]){
+
+        metal.velocityX = metal.speed;
+
+    }
+
+    else if(keys["arrowleft"]){
+
+        metal.velocityX = -metal.speed;
+
+    }
+
+    else {
+
+        metal.velocityX *= 0.8;
+
+    }
+
+
+    metal.x += metal.velocityX;
+
+
+
+    // jump
+
+    if(
+        keys[" "] &&
+        metal.grounded
+    ){
+
+        metal.velocityY = metal.jumpPower;
+
+        metal.grounded = false;
+
+    }
+
+
+
+    // gravity
+
+    metal.velocityY += 0.45;
+
+    metal.y += metal.velocityY;
+
+
+
+    // ground collision
+
+    if(
+        metal.y + metal.height >= world.ground
+    ){
+
+        metal.y =
+            world.ground - metal.height;
+
+        metal.velocityY = 0;
+
+        metal.grounded = true;
+
+    }
+
+
+
+    // camera
+
+    camera.x =
+        metal.x - canvas.width / 2;
+
+
+    if(camera.x < 0)
+        camera.x = 0;
+
+
 }
 
 
-html,
-body {
 
-    width: 100%;
-    height: 100%;
+// =========================
+// CURRENT SPRITE
+// =========================
 
-    overflow: hidden;
+function getSprite(){
 
-    background: #000;
-
-    font-family: Arial, Helvetica, sans-serif;
-
-}
+    if(!metal.grounded)
+        return sprites.jump;
 
 
+    if(Math.abs(metal.velocityX) > 0.2)
+        return sprites.run;
 
-body {
 
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
+    return sprites.idle;
 
 }
 
 
 
-/* =========================
-   GAME WINDOW
-========================= */
+// =========================
+// DRAW
+// =========================
+
+function draw(){
 
 
-#game-container {
+    // sky
 
-    position: relative;
+    ctx.fillStyle = "#4da6ff";
 
-    width: 100vw;
-    height: 100vh;
-
-    overflow: hidden;
-
-    background: #000;
-
-}
-
-
-
-/* =========================
-   CANVAS
-========================= */
-
-
-#gameCanvas {
-
-    position: absolute;
-
-    left: 0;
-    top: 0;
-
-
-    width: 100%;
-    height: 100%;
-
-
-    display: block;
-
-
-    image-rendering: pixelated;
-
-}
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
 
 
-/* =========================
-   TITLE SCREEN
-========================= */
+    ctx.save();
 
 
-#title-screen {
-
-    position: absolute;
-
-    inset: 0;
-
-
-    z-index: 10;
+    ctx.translate(
+        -camera.x,
+        0
+    );
 
 
-    display: flex;
 
-    justify-content: center;
+    // ground
 
-    align-items: center;
+    ctx.fillStyle = "#35b34a";
+
+    ctx.fillRect(
+        0,
+        world.ground,
+        world.width,
+        40
+    );
 
 
-    text-align: center;
+
+    ctx.fillStyle = "#8b5a2b";
+
+    ctx.fillRect(
+        0,
+        world.ground + 20,
+        world.width,
+        40
+    );
 
 
-    background:
 
-        radial-gradient(
-            circle,
-            #355d99,
-            #182946 50%,
-            #05070d
+    // rings
+
+    for(let ring of rings){
+
+        ctx.strokeStyle = "#ffd83d";
+
+        ctx.lineWidth = 2;
+
+
+        ctx.beginPath();
+
+        ctx.arc(
+
+            ring.x,
+
+            ring.y,
+
+            7,
+
+            0,
+
+            Math.PI * 2
+
         );
 
-}
 
-
-
-.title-content {
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-}
-
-
-
-/* =========================
-   LOGO TEXT
-========================= */
-
-
-.small-title {
-
-    color: #168cff;
-
-
-    font-size: clamp(
-        20px,
-        4vw,
-        42px
-    );
-
-
-    font-weight: 900;
-
-    font-style: italic;
-
-
-    letter-spacing: 8px;
-
-
-    text-shadow:
-
-        4px 4px 0 #000,
-
-        0 0 25px #168cff;
-
-}
-
-
-
-h1 {
-
-    margin-top: 5px;
-
-
-    color: white;
-
-
-    font-size: clamp(
-        50px,
-        10vw,
-        120px
-    );
-
-
-    font-weight: 900;
-
-    font-style: italic;
-
-
-    line-height: .85;
-
-
-    letter-spacing: -6px;
-
-
-    text-shadow:
-
-        7px 7px 0 #000,
-
-        0 0 35px #168cff;
-
-}
-
-
-
-.subtitle {
-
-    margin-top: 20px;
-
-
-    color: #c5d4ec;
-
-
-    font-size: clamp(
-        9px,
-        1.4vw,
-        15px
-    );
-
-
-    font-weight: bold;
-
-
-    letter-spacing: 4px;
-
-}
-
-
-
-/* =========================
-   BUTTON
-========================= */
-
-
-#start-button {
-
-
-    margin-top: 40px;
-
-
-    padding:
-
-        16px 50px;
-
-
-    border:
-
-        3px solid white;
-
-
-    border-radius: 5px;
-
-
-    background: #168cff;
-
-
-    color:white;
-
-
-    font-size: 20px;
-
-
-    font-weight:900;
-
-
-    letter-spacing:3px;
-
-
-    cursor:pointer;
-
-
-
-    box-shadow:
-
-        0 7px 0 #07519b,
-
-        0 0 30px #168cff;
-
-
-}
-
-
-
-#start-button:hover {
-
-
-    background:#42a7ff;
-
-
-}
-
-
-
-#start-button:active {
-
-
-    transform:translateY(5px);
-
-
-    box-shadow:
-
-        0 2px 0 #07519b;
-
-
-}
-
-
-
-/* =========================
-   CONTROLS
-========================= */
-
-
-.controls {
-
-
-    display:flex;
-
-
-    gap:25px;
-
-
-    margin-top:30px;
-
-
-    color:white;
-
-
-    font-size:10px;
-
-
-    font-weight:bold;
-
-
-}
-
-
-
-.controls div {
-
-
-    display:flex;
-
-
-    flex-direction:column;
-
-
-}
-
-
-
-.controls span {
-
-
-    color:#8fa4c7;
-
-
-    font-size:8px;
-
-
-    margin-top:3px;
-
-
-}
-
-
-
-.version {
-
-
-    margin-top:25px;
-
-
-    color:#667995;
-
-
-    font-size:8px;
-
-
-    letter-spacing:3px;
-
-
-}
-
-
-
-
-
-/* =========================
-   LOADING
-========================= */
-
-
-#loading {
-
-
-    position:absolute;
-
-
-    inset:0;
-
-
-    z-index:20;
-
-
-    display:none;
-
-
-    justify-content:center;
-
-
-    align-items:center;
-
-
-    background:#05070d;
-
-
-    color:white;
-
-
-}
-
-
-
-.loading-content {
-
-
-    text-align:center;
-
-
-}
-
-
-
-.loading-title {
-
-
-    color:#168cff;
-
-
-    font-size:25px;
-
-
-    font-weight:900;
-
-
-    font-style:italic;
-
-
-}
-
-
-
-.loading-text {
-
-
-    margin-top:10px;
-
-
-    color:#9aa9c4;
-
-
-    font-size:10px;
-
-
-    letter-spacing:2px;
-
-
-}
-
-
-
-.loading-bar {
-
-
-    width:280px;
-
-
-    height:8px;
-
-
-    margin-top:20px;
-
-
-    background:#18263d;
-
-
-}
-
-
-
-.loading-bar-fill {
-
-
-    height:100%;
-
-
-    width:0%;
-
-
-    background:#168cff;
-
-
-}
-
-
-
-
-
-/* =========================
-   HUD
-========================= */
-
-
-#hud {
-
-
-    position:absolute;
-
-
-    top:20px;
-
-
-    left:25px;
-
-
-    z-index:5;
-
-
-    display:none;
-
-
-    color:white;
-
-
-    font-weight:bold;
-
-
-    text-shadow:
-
-        3px 3px 0 #000;
-
-
-}
-
-
-
-.hud-character {
-
-
-    color:#168cff;
-
-
-    margin-bottom:8px;
-
-
-    font-size:14px;
-
-
-}
-
-
-
-.hud-row {
-
-
-    display:flex;
-
-
-    gap:30px;
-
-
-    font-size:16px;
-
-
-}
-
-
-
-
-
-/* =========================
-   PAUSE
-========================= */
-
-
-#pause-button {
-
-
-    position:absolute;
-
-
-    top:20px;
-
-
-    right:25px;
-
-
-    z-index:30;
-
-
-    display:none;
-
-
-    width:42px;
-
-
-    height:42px;
-
-
-    border:2px solid white;
-
-
-    background:rgba(0,0,0,.5);
-
-
-    color:white;
-
-
-    font-weight:900;
-
-
-    font-size:18px;
-
-
-}
-
-
-
-
-
-/* =========================
-   MOBILE
-========================= */
-
-
-@media(max-width:600px){
-
-
-    h1 {
-
-        font-size:50px;
+        ctx.stroke();
 
     }
 
 
-    .controls {
 
-        gap:10px;
+
+    // Metal Sonic
+
+    let sprite = getSprite();
+
+
+    if(sprite.complete){
+
+        ctx.drawImage(
+
+            sprite,
+
+            metal.x - 4,
+
+            metal.y - 8,
+
+            40,
+
+            55
+
+        );
 
     }
 
 
-    #start-button {
 
-        padding:13px 35px;
-
-        font-size:16px;
-
-    }
+    ctx.restore();
 
 
 }
+
+
+
+// =========================
+// LOOP
+// =========================
+
+function loop(){
+
+    update();
+
+    draw();
+
+    requestAnimationFrame(loop);
+
+}
+
+
+loop();
