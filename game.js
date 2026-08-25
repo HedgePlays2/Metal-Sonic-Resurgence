@@ -6,12 +6,11 @@ const titleScreen = document.getElementById("title-screen");
 const hud = document.getElementById("hud");
 
 let gameStarted = false;
-let keys = {};
 
 
-// ========================================
+// ==========================================
 // SPRITES
-// ========================================
+// ==========================================
 
 const sprites = {
     idle: new Image(),
@@ -24,141 +23,138 @@ sprites.run.src = "sprites/run.png";
 sprites.jump.src = "sprites/jump.png";
 
 
-// ========================================
-// WORLD
-// ========================================
-
-const world = {
-    width: 3000,
-    ground: 200
-};
-
-
-// ========================================
-// METAL SONIC
-// ========================================
-
-const metal = {
-    x: 80,
-    y: 120,
-
-    width: 32,
-    height: 45,
-
-    velocityX: 0,
-    velocityY: 0,
-
-    speed: 4,
-    jumpPower: -9,
-
-    grounded: false,
-
-    // 1 = facing right
-    // -1 = facing left
-    direction: 1,
-
-    // Plasma Dash
-    dashing: false,
-    dashTimer: 0,
-    dashDuration: 12,
-    dashSpeed: 10,
-
-    dashCooldown: 0
-};
-
-
-// ========================================
-// CAMERA
-// ========================================
-
-const camera = {
-    x: 0
-};
-
-
-// ========================================
-// RINGS
-// ========================================
-
-const rings = [
-    { x: 300, y: 150 },
-    { x: 350, y: 150 },
-    { x: 400, y: 150 },
-    { x: 500, y: 150 }
-];
-
-
-// ========================================
+// ==========================================
 // INPUT
-// ========================================
+// ==========================================
 
-window.addEventListener("keydown", (e) => {
+const keys = {};
 
-    const key = e.key.toLowerCase();
+window.addEventListener("keydown", function (event) {
+
+    const key = event.key.toLowerCase();
 
     keys[key] = true;
 
-    // Prevent the browser from scrolling
     if (
         key === "arrowleft" ||
         key === "arrowright" ||
-        key === "arrowup" ||
-        key === "arrowdown" ||
         key === " "
     ) {
-        e.preventDefault();
+        event.preventDefault();
     }
 
 });
 
 
-window.addEventListener("keyup", (e) => {
+window.addEventListener("keyup", function (event) {
 
-    keys[e.key.toLowerCase()] = false;
+    keys[event.key.toLowerCase()] = false;
 
 });
 
 
-// ========================================
-// START GAME
-// ========================================
+// ==========================================
+// WORLD
+// ==========================================
 
-startButton.onclick = () => {
+const world = {
+
+    width: 3000,
+
+    ground: 200
+
+};
+
+
+// ==========================================
+// METAL SONIC
+// ==========================================
+
+const metal = {
+
+    x: 80,
+
+    y: 155,
+
+    width: 32,
+
+    height: 45,
+
+    velocityX: 0,
+
+    velocityY: 0,
+
+    speed: 4,
+
+    jumpPower: -9,
+
+    gravity: 0.45,
+
+    grounded: false,
+
+    direction: 1,
+
+    dashing: false,
+
+    dashTimer: 0,
+
+    dashLength: 15,
+
+    dashSpeed: 11
+
+};
+
+
+// ==========================================
+// CAMERA
+// ==========================================
+
+const camera = {
+
+    x: 0
+
+};
+
+
+// ==========================================
+// RINGS
+// ==========================================
+
+const rings = [
+
+    { x: 300, y: 150 },
+
+    { x: 350, y: 150 },
+
+    { x: 400, y: 150 },
+
+    { x: 500, y: 150 },
+
+    { x: 550, y: 150 }
+
+];
+
+
+// ==========================================
+// START BUTTON
+// ==========================================
+
+startButton.addEventListener("click", function () {
 
     gameStarted = true;
 
     titleScreen.style.display = "none";
 
-    hud.style.display = "block";
-
-};
-
-
-// ========================================
-// PLASMA DASH
-// ========================================
-
-function startDash() {
-
-    if (
-        metal.dashing ||
-        metal.dashCooldown > 0
-    ) {
-        return;
+    if (hud) {
+        hud.style.display = "block";
     }
 
-    metal.dashing = true;
-
-    metal.dashTimer = metal.dashDuration;
-
-    metal.dashCooldown = 30;
-
-}
+});
 
 
-// ========================================
+// ==========================================
 // UPDATE
-// ========================================
+// ==========================================
 
 function update() {
 
@@ -167,33 +163,46 @@ function update() {
     }
 
 
-    // ====================================
-    // DASH
-    // ====================================
+    // --------------------------------------
+    // PLASMA DASH
+    // --------------------------------------
 
-    if (
-        keys["shift"] &&
-        !metal.dashing
-    ) {
+    if (keys["shift"] && !metal.dashing) {
 
-        startDash();
+        metal.dashing = true;
 
-        // Prevent repeatedly starting dash
+        metal.dashTimer = metal.dashLength;
+
         keys["shift"] = false;
 
     }
 
 
-    if (metal.dashCooldown > 0) {
-        metal.dashCooldown--;
+    // --------------------------------------
+    // DASH
+    // --------------------------------------
+
+    if (metal.dashing) {
+
+        metal.velocityX =
+            metal.direction * metal.dashSpeed;
+
+        metal.dashTimer--;
+
+        if (metal.dashTimer <= 0) {
+
+            metal.dashing = false;
+
+        }
+
     }
 
 
-    // ====================================
+    // --------------------------------------
     // NORMAL MOVEMENT
-    // ====================================
+    // --------------------------------------
 
-    if (!metal.dashing) {
+    else {
 
         if (keys["arrowright"]) {
 
@@ -220,55 +229,14 @@ function update() {
     }
 
 
-    // ====================================
-    // PLASMA DASH MOVEMENT
-    // ====================================
-
-    if (metal.dashing) {
-
-        metal.velocityX =
-            metal.direction * metal.dashSpeed;
-
-        metal.dashTimer--;
-
-        if (metal.dashTimer <= 0) {
-
-            metal.dashing = false;
-
-        }
-
-    }
-
+    // Move
 
     metal.x += metal.velocityX;
 
 
-    // ====================================
-    // WORLD BOUNDARIES
-    // ====================================
-
-    if (metal.x < 0) {
-
-        metal.x = 0;
-
-        metal.velocityX = 0;
-
-    }
-
-
-    if (metal.x > world.width - metal.width) {
-
-        metal.x =
-            world.width - metal.width;
-
-        metal.velocityX = 0;
-
-    }
-
-
-    // ====================================
+    // --------------------------------------
     // JUMP
-    // ====================================
+    // --------------------------------------
 
     if (
         keys[" "] &&
@@ -280,25 +248,23 @@ function update() {
 
         metal.grounded = false;
 
-        // Prevent holding space from
-        // repeatedly jumping
         keys[" "] = false;
 
     }
 
 
-    // ====================================
+    // --------------------------------------
     // GRAVITY
-    // ====================================
+    // --------------------------------------
 
-    metal.velocityY += 0.45;
+    metal.velocityY += metal.gravity;
 
     metal.y += metal.velocityY;
 
 
-    // ====================================
-    // GROUND COLLISION
-    // ====================================
+    // --------------------------------------
+    // GROUND
+    // --------------------------------------
 
     if (
         metal.y + metal.height >= world.ground
@@ -314,9 +280,31 @@ function update() {
     }
 
 
-    // ====================================
+    // --------------------------------------
+    // WORLD BOUNDS
+    // --------------------------------------
+
+    if (metal.x < 0) {
+
+        metal.x = 0;
+
+    }
+
+
+    if (
+        metal.x >
+        world.width - metal.width
+    ) {
+
+        metal.x =
+            world.width - metal.width;
+
+    }
+
+
+    // --------------------------------------
     // CAMERA
-    // ====================================
+    // --------------------------------------
 
     camera.x =
         metal.x - canvas.width / 2;
@@ -342,11 +330,11 @@ function update() {
 }
 
 
-// ========================================
-// GET CURRENT SPRITE
-// ========================================
+// ==========================================
+// SELECT SPRITE
+// ==========================================
 
-function getSprite() {
+function getCurrentSprite() {
 
     if (!metal.grounded) {
 
@@ -356,7 +344,7 @@ function getSprite() {
 
 
     if (
-        Math.abs(metal.velocityX) > 0.2
+        Math.abs(metal.velocityX) > 0.3
     ) {
 
         return sprites.run;
@@ -369,15 +357,15 @@ function getSprite() {
 }
 
 
-// ========================================
+// ==========================================
 // DRAW
-// ========================================
+// ==========================================
 
 function draw() {
 
-    // ====================================
+    // --------------------------------------
     // SKY
-    // ====================================
+    // --------------------------------------
 
     ctx.fillStyle = "#5db8ff";
 
@@ -398,21 +386,30 @@ function draw() {
     );
 
 
-    // ====================================
-    // SIMPLE BACKGROUND
-    // ====================================
+    // --------------------------------------
+    // BACKGROUND HILLS
+    // --------------------------------------
 
     ctx.fillStyle = "#72c7ff";
 
     ctx.beginPath();
 
-    ctx.moveTo(0, 160);
-    ctx.lineTo(120, 90);
-    ctx.lineTo(240, 160);
-    ctx.lineTo(360, 80);
-    ctx.lineTo(500, 160);
+    ctx.moveTo(0, 180);
 
-    ctx.lineTo(500, 200);
+    ctx.lineTo(100, 110);
+
+    ctx.lineTo(200, 180);
+
+    ctx.lineTo(320, 100);
+
+    ctx.lineTo(470, 180);
+
+    ctx.lineTo(600, 100);
+
+    ctx.lineTo(750, 180);
+
+    ctx.lineTo(750, 200);
+
     ctx.lineTo(0, 200);
 
     ctx.closePath();
@@ -420,9 +417,9 @@ function draw() {
     ctx.fill();
 
 
-    // ====================================
-    // GROUND
-    // ====================================
+    // --------------------------------------
+    // GRASS
+    // --------------------------------------
 
     ctx.fillStyle = "#32b34a";
 
@@ -430,9 +427,13 @@ function draw() {
         0,
         world.ground,
         world.width,
-        40
+        20
     );
 
+
+    // --------------------------------------
+    // DIRT
+    // --------------------------------------
 
     ctx.fillStyle = "#8b552b";
 
@@ -440,13 +441,13 @@ function draw() {
         0,
         world.ground + 20,
         world.width,
-        40
+        60
     );
 
 
-    // ====================================
+    // --------------------------------------
     // RINGS
-    // ====================================
+    // --------------------------------------
 
     for (const ring of rings) {
 
@@ -469,87 +470,99 @@ function draw() {
     }
 
 
-    // ====================================
+    // --------------------------------------
+    // PLASMA TRAIL
+    // --------------------------------------
+
+    if (metal.dashing) {
+
+        for (let i = 1; i <= 5; i++) {
+
+            ctx.globalAlpha =
+                0.45 - i * 0.06;
+
+            ctx.fillStyle = "#42d9ff";
+
+            ctx.beginPath();
+
+            ctx.arc(
+
+                metal.x
+                - metal.direction * i * 7
+                + 16,
+
+                metal.y + 22,
+
+                3 + i,
+
+                0,
+
+                Math.PI * 2
+
+            );
+
+            ctx.fill();
+
+        }
+
+        ctx.globalAlpha = 1;
+
+    }
+
+
+    // --------------------------------------
     // METAL SONIC
-    // ====================================
+    // --------------------------------------
 
-    const sprite = getSprite();
+    const sprite =
+        getCurrentSprite();
 
 
-    if (sprite.complete) {
+    if (sprite.complete && sprite.naturalWidth > 0) {
 
         ctx.save();
 
 
-        // Flip sprite when facing left
-
         if (metal.direction === -1) {
 
+            // Face LEFT
+
             ctx.translate(
-                metal.x + 16,
+                metal.x + metal.width,
                 metal.y - 4
             );
 
             ctx.scale(-1, 1);
 
             ctx.drawImage(
+
                 sprite,
-                -16,
+
                 0,
-                32,
-                45
+                0,
+
+                metal.width,
+                metal.height
+
             );
 
         }
 
         else {
 
+            // Face RIGHT
+
             ctx.drawImage(
+
                 sprite,
+
                 metal.x,
                 metal.y - 4,
-                32,
-                45
+
+                metal.width,
+                metal.height
+
             );
-
-        }
-
-
-        ctx.restore();
-
-    }
-
-
-    // ====================================
-    // PLASMA DASH EFFECT
-    // ====================================
-
-    if (metal.dashing) {
-
-        ctx.save();
-
-        ctx.globalAlpha = 0.65;
-
-        ctx.fillStyle = "#45d9ff";
-
-
-        for (let i = 1; i <= 4; i++) {
-
-            const trailX =
-                metal.x -
-                metal.direction * i * 9;
-
-            ctx.beginPath();
-
-            ctx.arc(
-                trailX + 16,
-                metal.y + 22,
-                4 + i,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fill();
 
         }
 
@@ -564,19 +577,19 @@ function draw() {
 }
 
 
-// ========================================
+// ==========================================
 // GAME LOOP
-// ========================================
+// ==========================================
 
-function loop() {
+function gameLoop() {
 
     update();
 
     draw();
 
-    requestAnimationFrame(loop);
+    requestAnimationFrame(gameLoop);
 
 }
 
 
-loop();
+gameLoop();
