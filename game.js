@@ -1,359 +1,580 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-
 const startButton = document.getElementById("start-button");
 const titleScreen = document.getElementById("title-screen");
 const hud = document.getElementById("hud");
 
-
 let gameStarted = false;
-
-
 let keys = {};
 
 
-
+// ========================================
 // SPRITES
+// ========================================
 
 const sprites = {
-
-    idle:new Image(),
-
-    run:new Image(),
-
-    jump:new Image()
-
+    idle: new Image(),
+    run: new Image(),
+    jump: new Image()
 };
 
-
-sprites.idle.src="sprites/idle.png";
-sprites.run.src="sprites/run.png";
-sprites.jump.src="sprites/jump.png";
-
+sprites.idle.src = "sprites/idle.png";
+sprites.run.src = "sprites/run.png";
+sprites.jump.src = "sprites/jump.png";
 
 
-
+// ========================================
 // WORLD
+// ========================================
 
 const world = {
-
-    width:3000,
-
-    ground:200
-
+    width: 3000,
+    ground: 200
 };
 
 
-
-
+// ========================================
 // METAL SONIC
+// ========================================
 
 const metal = {
+    x: 80,
+    y: 120,
 
-    x:80,
+    width: 32,
+    height: 45,
 
-    y:120,
+    velocityX: 0,
+    velocityY: 0,
 
+    speed: 4,
+    jumpPower: -9,
 
-    width:32,
+    grounded: false,
 
-    height:45,
+    // 1 = facing right
+    // -1 = facing left
+    direction: 1,
 
+    // Plasma Dash
+    dashing: false,
+    dashTimer: 0,
+    dashDuration: 12,
+    dashSpeed: 10,
 
-    velocityX:0,
-
-    velocityY:0,
-
-
-    speed:4,
-
-    jumpPower:-9,
-
-
-    grounded:false
-
+    dashCooldown: 0
 };
 
 
-
-
+// ========================================
 // CAMERA
+// ========================================
 
-let camera = {
-
-    x:0
-
+const camera = {
+    x: 0
 };
 
 
-
-
+// ========================================
 // RINGS
+// ========================================
 
 const rings = [
-
-    {x:300,y:150},
-
-    {x:350,y:150},
-
-    {x:400,y:150},
-
-    {x:500,y:150}
-
+    { x: 300, y: 150 },
+    { x: 350, y: 150 },
+    { x: 400, y: 150 },
+    { x: 500, y: 150 }
 ];
 
 
-
-
+// ========================================
 // INPUT
+// ========================================
 
-window.addEventListener(
-"keydown",
-e=>{
+window.addEventListener("keydown", (e) => {
 
-keys[e.key.toLowerCase()]=true;
+    const key = e.key.toLowerCase();
+
+    keys[key] = true;
+
+    // Prevent the browser from scrolling
+    if (
+        key === "arrowleft" ||
+        key === "arrowright" ||
+        key === "arrowup" ||
+        key === "arrowdown" ||
+        key === " "
+    ) {
+        e.preventDefault();
+    }
 
 });
 
 
-window.addEventListener(
-"keyup",
-e=>{
+window.addEventListener("keyup", (e) => {
 
-keys[e.key.toLowerCase()]=false;
+    keys[e.key.toLowerCase()] = false;
 
 });
 
 
+// ========================================
+// START GAME
+// ========================================
 
+startButton.onclick = () => {
 
-// START
+    gameStarted = true;
 
-startButton.onclick=()=>{
+    titleScreen.style.display = "none";
 
-gameStarted=true;
-
-titleScreen.style.display="none";
-
-hud.style.display="block";
+    hud.style.display = "block";
 
 };
 
 
+// ========================================
+// PLASMA DASH
+// ========================================
+
+function startDash() {
+
+    if (
+        metal.dashing ||
+        metal.dashCooldown > 0
+    ) {
+        return;
+    }
+
+    metal.dashing = true;
+
+    metal.dashTimer = metal.dashDuration;
+
+    metal.dashCooldown = 30;
+
+}
 
 
+// ========================================
 // UPDATE
+// ========================================
 
-function update(){
+function update() {
 
-
-if(!gameStarted)
-return;
-
-
-
-// movement
-
-if(keys["arrowright"])
-metal.velocityX=metal.speed;
+    if (!gameStarted) {
+        return;
+    }
 
 
-else if(keys["arrowleft"])
-metal.velocityX=-metal.speed;
+    // ====================================
+    // DASH
+    // ====================================
+
+    if (
+        keys["shift"] &&
+        !metal.dashing
+    ) {
+
+        startDash();
+
+        // Prevent repeatedly starting dash
+        keys["shift"] = false;
+
+    }
 
 
-else
-metal.velocityX*=0.8;
+    if (metal.dashCooldown > 0) {
+        metal.dashCooldown--;
+    }
 
 
+    // ====================================
+    // NORMAL MOVEMENT
+    // ====================================
 
-metal.x+=metal.velocityX;
+    if (!metal.dashing) {
+
+        if (keys["arrowright"]) {
+
+            metal.velocityX = metal.speed;
+
+            metal.direction = 1;
+
+        }
+
+        else if (keys["arrowleft"]) {
+
+            metal.velocityX = -metal.speed;
+
+            metal.direction = -1;
+
+        }
+
+        else {
+
+            metal.velocityX *= 0.8;
+
+        }
+
+    }
 
 
+    // ====================================
+    // PLASMA DASH MOVEMENT
+    // ====================================
+
+    if (metal.dashing) {
+
+        metal.velocityX =
+            metal.direction * metal.dashSpeed;
+
+        metal.dashTimer--;
+
+        if (metal.dashTimer <= 0) {
+
+            metal.dashing = false;
+
+        }
+
+    }
 
 
-// jump
+    metal.x += metal.velocityX;
 
-if(keys[" "] && metal.grounded){
 
-metal.velocityY=-9;
+    // ====================================
+    // WORLD BOUNDARIES
+    // ====================================
 
-metal.grounded=false;
+    if (metal.x < 0) {
+
+        metal.x = 0;
+
+        metal.velocityX = 0;
+
+    }
+
+
+    if (metal.x > world.width - metal.width) {
+
+        metal.x =
+            world.width - metal.width;
+
+        metal.velocityX = 0;
+
+    }
+
+
+    // ====================================
+    // JUMP
+    // ====================================
+
+    if (
+        keys[" "] &&
+        metal.grounded &&
+        !metal.dashing
+    ) {
+
+        metal.velocityY = metal.jumpPower;
+
+        metal.grounded = false;
+
+        // Prevent holding space from
+        // repeatedly jumping
+        keys[" "] = false;
+
+    }
+
+
+    // ====================================
+    // GRAVITY
+    // ====================================
+
+    metal.velocityY += 0.45;
+
+    metal.y += metal.velocityY;
+
+
+    // ====================================
+    // GROUND COLLISION
+    // ====================================
+
+    if (
+        metal.y + metal.height >= world.ground
+    ) {
+
+        metal.y =
+            world.ground - metal.height;
+
+        metal.velocityY = 0;
+
+        metal.grounded = true;
+
+    }
+
+
+    // ====================================
+    // CAMERA
+    // ====================================
+
+    camera.x =
+        metal.x - canvas.width / 2;
+
+
+    if (camera.x < 0) {
+
+        camera.x = 0;
+
+    }
+
+
+    if (
+        camera.x >
+        world.width - canvas.width
+    ) {
+
+        camera.x =
+            world.width - canvas.width;
+
+    }
 
 }
 
 
+// ========================================
+// GET CURRENT SPRITE
+// ========================================
 
-// gravity
+function getSprite() {
 
-metal.velocityY+=0.45;
+    if (!metal.grounded) {
 
-metal.y+=metal.velocityY;
+        return sprites.jump;
 
-
-
-
-// ground
-
-if(
-metal.y+metal.height >= world.ground
-){
-
-metal.y=world.ground-metal.height;
-
-metal.velocityY=0;
-
-metal.grounded=true;
-
-}
+    }
 
 
+    if (
+        Math.abs(metal.velocityX) > 0.2
+    ) {
+
+        return sprites.run;
+
+    }
 
 
-// camera
-
-camera.x=metal.x-212;
-
-
-if(camera.x<0)
-camera.x=0;
+    return sprites.idle;
 
 }
 
 
-
-
-// SPRITE
-
-function getSprite(){
-
-if(!metal.grounded)
-return sprites.jump;
-
-
-if(Math.abs(metal.velocityX)>0.2)
-return sprites.run;
-
-
-return sprites.idle;
-
-}
-
-
-
-
+// ========================================
 // DRAW
+// ========================================
 
-function draw(){
+function draw() {
 
+    // ====================================
+    // SKY
+    // ====================================
 
+    ctx.fillStyle = "#5db8ff";
 
-ctx.fillStyle="#5db8ff";
-
-ctx.fillRect(
-0,
-0,
-424,
-240
-);
-
-
-
-ctx.save();
-
-
-ctx.translate(
--camera.x,
-0
-);
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
 
-
-// ground
-
-ctx.fillStyle="#32b34a";
-
-ctx.fillRect(
-0,
-world.ground,
-world.width,
-40
-);
+    ctx.save();
 
 
-
-// rings
-
-for(let ring of rings){
-
-ctx.strokeStyle="#ffd83d";
-
-ctx.lineWidth=1.5;
+    ctx.translate(
+        -camera.x,
+        0
+    );
 
 
-ctx.beginPath();
+    // ====================================
+    // SIMPLE BACKGROUND
+    // ====================================
 
-ctx.arc(
+    ctx.fillStyle = "#72c7ff";
 
-ring.x,
+    ctx.beginPath();
 
-ring.y,
+    ctx.moveTo(0, 160);
+    ctx.lineTo(120, 90);
+    ctx.lineTo(240, 160);
+    ctx.lineTo(360, 80);
+    ctx.lineTo(500, 160);
 
-4,
+    ctx.lineTo(500, 200);
+    ctx.lineTo(0, 200);
 
-0,
+    ctx.closePath();
 
-Math.PI*2
+    ctx.fill();
 
-);
 
-ctx.stroke();
+    // ====================================
+    // GROUND
+    // ====================================
+
+    ctx.fillStyle = "#32b34a";
+
+    ctx.fillRect(
+        0,
+        world.ground,
+        world.width,
+        40
+    );
+
+
+    ctx.fillStyle = "#8b552b";
+
+    ctx.fillRect(
+        0,
+        world.ground + 20,
+        world.width,
+        40
+    );
+
+
+    // ====================================
+    // RINGS
+    // ====================================
+
+    for (const ring of rings) {
+
+        ctx.strokeStyle = "#ffd83d";
+
+        ctx.lineWidth = 1.5;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            ring.x,
+            ring.y,
+            4,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    // ====================================
+    // METAL SONIC
+    // ====================================
+
+    const sprite = getSprite();
+
+
+    if (sprite.complete) {
+
+        ctx.save();
+
+
+        // Flip sprite when facing left
+
+        if (metal.direction === -1) {
+
+            ctx.translate(
+                metal.x + 16,
+                metal.y - 4
+            );
+
+            ctx.scale(-1, 1);
+
+            ctx.drawImage(
+                sprite,
+                -16,
+                0,
+                32,
+                45
+            );
+
+        }
+
+        else {
+
+            ctx.drawImage(
+                sprite,
+                metal.x,
+                metal.y - 4,
+                32,
+                45
+            );
+
+        }
+
+
+        ctx.restore();
+
+    }
+
+
+    // ====================================
+    // PLASMA DASH EFFECT
+    // ====================================
+
+    if (metal.dashing) {
+
+        ctx.save();
+
+        ctx.globalAlpha = 0.65;
+
+        ctx.fillStyle = "#45d9ff";
+
+
+        for (let i = 1; i <= 4; i++) {
+
+            const trailX =
+                metal.x -
+                metal.direction * i * 9;
+
+            ctx.beginPath();
+
+            ctx.arc(
+                trailX + 16,
+                metal.y + 22,
+                4 + i,
+                0,
+                Math.PI * 2
+            );
+
+            ctx.fill();
+
+        }
+
+
+        ctx.restore();
+
+    }
+
+
+    ctx.restore();
 
 }
 
 
+// ========================================
+// GAME LOOP
+// ========================================
 
-// metal
+function loop() {
 
-let sprite=getSprite();
+    update();
 
+    draw();
 
-if(sprite.complete){
-
-ctx.drawImage(
-
-sprite,
-
-metal.x-2,
-
-metal.y-4,
-
-32,
-
-45
-
-);
-
-}
-
-
-ctx.restore();
-
-
-}
-
-
-
-// LOOP
-
-function loop(){
-
-update();
-
-draw();
-
-requestAnimationFrame(loop);
+    requestAnimationFrame(loop);
 
 }
 
