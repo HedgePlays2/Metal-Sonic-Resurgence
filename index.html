@@ -2,147 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metal Sonic: Resurgence</title>
-
-    <!-- Puter.js -->
-    <script src="https://js.puter.com/v2/"></script>
-
-    <!-- Game CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <main id="game-container">
+    <div id="game-container">
 
-        <!-- 424 x 240 INTERNAL GAME RESOLUTION -->
-        <canvas
-            id="gameCanvas"
-            width="424"
-            height="240">
-        </canvas>
+        <canvas id="gameCanvas" width="640" height="360"></canvas>
 
-
-        <!-- TITLE SCREEN -->
-        <section id="title-screen">
-
+        <div id="title-screen">
             <div class="title-content">
 
-                <div class="small-title">
-                    METAL SONIC
-                </div>
+                <div class="small-title">METAL SONIC</div>
 
-                <h1>
-                    RESURGENCE
-                </h1>
+                <h1>RESURGENCE</h1>
 
                 <div class="subtitle">
                     A FAN-MADE SONIC ADVENTURE
                 </div>
 
-                <button
-                    id="start-button"
-                    type="button">
+                <button id="start-button">
                     START GAME
                 </button>
 
                 <div class="controls">
-
-                    <div>
-                        ARROWS
-                        <span>MOVE</span>
-                    </div>
-
-                    <div>
-                        SPACE
-                        <span>JUMP</span>
-                    </div>
-
-                    <div>
-                        SHIFT
-                        <span>PLASMA DASH</span>
-                    </div>
-
-                    <div>
-                        E
-                        <span>OVERDRIVE</span>
-                    </div>
-
-                </div>
-
-                <div class="version">
-                    PROTOTYPE BUILD
+                    <span>← → MOVE</span>
+                    <span>SPACE JUMP</span>
+                    <span>SHIFT DASH</span>
                 </div>
 
             </div>
+        </div>
 
-        </section>
+        <div id="hud">
+            RINGS <span id="rings">0</span>
+            &nbsp;&nbsp;
+            SCORE <span id="score">0</span>
+        </div>
 
+    </div>
 
-        <!-- HUD -->
-        <section id="hud">
-
-            <div class="hud-character">
-                METAL SONIC
-            </div>
-
-            <div class="hud-row">
-                <span>RINGS</span>
-                <span id="rings">0</span>
-            </div>
-
-            <div class="hud-row">
-                <span>SCORE</span>
-                <span id="score">0</span>
-            </div>
-
-        </section>
-
-
-        <!-- LOADING SCREEN -->
-        <section id="loading">
-
-            <div class="loading-content">
-
-                <div class="loading-title">
-                    METAL SONIC
-                </div>
-
-                <div class="loading-text">
-                    LOADING RESURGENCE...
-                </div>
-
-                <div class="loading-bar">
-
-                    <div
-                        id="loading-bar-fill"
-                        class="loading-bar-fill">
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- PAUSE BUTTON -->
-        <button
-            id="pause-button"
-            type="button">
-            II
-        </button>
-
-    </main>
-
-
-    <!-- GAME JAVASCRIPT -->
     <script src="game.js"></script>
 
 </body>
